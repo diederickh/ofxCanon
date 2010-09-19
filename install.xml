@@ -1,0 +1,11 @@
+<install>
+	<name>ofxCanon</name>
+	<version>0.01</version>
+	<author>Diederick Huijbers</author>
+	<url></url>
+	<add>
+		<include>
+			<path>../../../addons_diederick/ofxCanon/src/</path>
+		</include>
+	</add>
+</install>
