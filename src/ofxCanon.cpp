@@ -105,6 +105,8 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 
 		if(model == NULL) {
 			model = new ofxCanonModel(camera);
+			std::cout << "SET DOWNLOAD DIR: "<< sDownloadDir << std::endl;
+			model->setDownloadDir(sDownloadDir);
 		}
 		else
 			model->setCamera(camera);
@@ -113,8 +115,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			controller = new ofxCanonController(this, model);
 		}
 
-		std::cout << "SET DOWNLOAD DIR: "<< sDownloadDir << std::endl;
-		model->setDownloadDir(sDownloadDir);
+
 
 		// Set property event handler.
 		if (err == EDS_ERR_OK) {
