@@ -61,10 +61,10 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << std::endl;
+			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
 			ofxObservableEvent e("internal_error");
 			model->notifyObservers(&e);
-			return true;
+			return false;
 			//model->setSessionOpen(false);
 		}
 		else {

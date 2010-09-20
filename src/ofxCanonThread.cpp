@@ -1,7 +1,7 @@
 #include "ofxCanonThread.h"
 ofxCanonThread::ofxCanonThread()
 :times_initialized(0)
-,timeout(3000)
+,timeout(30000)
 ,should_check_on(0)
 ,was_initialized(false)
 {

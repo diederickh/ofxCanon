@@ -66,6 +66,7 @@
 		}
 		if(command == "start_evf") {
 			addCommand(new ofxCanonCommandStartEvf("start_evf", model));
+			addCommand(new ofxCanonCommandDownloadEvf("download_evf",model));
 		}
 		if(command == "end_evf") {
 			addCommand(new ofxCanonCommandEndEvf("end_evf",model));
