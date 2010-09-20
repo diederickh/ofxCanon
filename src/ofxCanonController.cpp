@@ -40,7 +40,7 @@
 	}
 
 	bool ofxCanonController::isRunning() {
-		return                                                ;
+		return is_running;
 	}
 
 	void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
