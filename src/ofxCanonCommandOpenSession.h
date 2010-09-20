@@ -70,6 +70,8 @@ public:
 		else {
 			model->setSessionOpen(true);
 		}
+		ofxObservableEvent e("opened_session");
+		model->notifyObservers(&e);
 		cout << "Opened session..." << std::endl;
 		return true;
 	}

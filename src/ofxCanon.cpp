@@ -7,6 +7,9 @@ ofxCanon::ofxCanon()
 	,is_initializing(false)
 	,model(NULL)
 {
+	model = new ofxCanonModel();
+	controller = new ofxCanonController();
+	controller->init(this, model);
 }
 
 ofxCanon::~ofxCanon() {
@@ -18,7 +21,7 @@ void ofxCanon::shutdown() {
 	if(evf_started)
 		endEvf();
 	if(model->isSessionOpen())
-		closeSession(); 
+		closeSession();
 	if(controller != NULL)
 		controller->shutdown();
 	if(is_sdk_loaded) {
@@ -103,16 +106,12 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 		cout << "CANON: Camera protocol portname " << device_info.szPortName << std::endl;
 		cout << "CANON: Initialized correctly using camera ID: " << nCameraID << std::endl;
 
-		if(model == NULL) {
-			model = new ofxCanonModel(camera);
-			std::cout << "SET DOWNLOAD DIR: "<< sDownloadDir << std::endl;
-			model->setDownloadDir(sDownloadDir);
-		}
-		else
+
+		if(model != NULL)
 			model->setCamera(camera);
 
 		if(controller == NULL) {
-			controller = new ofxCanonController(this, model);
+			//controller = new ofxCanonController(this, model);
 		}
 
 
@@ -136,6 +135,9 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 				,(EdsVoid *)controller
 			);
 		}
+		else{
+			std::cout << "ERROR: Cannot add property event listener: " << ofxCanonErrorToString(err) << std::endl;
+		}
 
 		// Set state event handler.
 		if(err == EDS_ERR_OK) {
@@ -146,6 +148,13 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 				,(EdsVoid *)controller
 			);
 		}
+		else {
+			std::cout << "ERROR: Cannot add object event listener: " << ofxCanonErrorToString(err) << std::endl;
+		}
+
+		if(err != EDS_ERR_OK) {
+			std::cout << "ERROR: Cannot add state event listener: " << ofxCanonErrorToString(err) << std::endl;
+		}
 
 		initialized = true;
 		is_initializing = false;
@@ -155,7 +164,6 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			setupActionSources();
 			setupObserver();
 			controller->run();
-
 		}
 		else {
 			// we started earlier.. just open the session again.

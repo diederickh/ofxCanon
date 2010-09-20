@@ -5,6 +5,7 @@
 #include "EDSDKErrors.h"
 #include "EDSDKTypes.h"
 
+#include "ofxCanonDebug.h"
 #include "ofxCommandPattern.h"
 #include "ofxCanonModel.h"
 #include "ofxCanonController.h"
@@ -12,6 +13,7 @@
 #include "ofxCanonPictureBox.h"
 #include "ofxCanonConnection.h"
 #include "ofxThread.h"
+
 #include "ofxObserver.h"
 #include <map>
 #include <string>

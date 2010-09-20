@@ -1,4 +1,5 @@
 #include "ofxCanonThread.h"
+
 ofxCanonThread::ofxCanonThread()
 :times_initialized(0)
 ,timeout(2000)
@@ -11,23 +12,34 @@ ofxCanonThread::ofxCanonThread()
 ofxCanonThread::~ofxCanonThread() {
 	std::cout << "~~~~ ofxCanonThread." <<std::endl;
 	canon.shutdown(); // we need to call this as the thread will continue as long as there are commands..
+	//CoUninitialize();
 }
 
 
 void ofxCanonThread::start(ofxCanonThreadCallback* pCallback) {
 	std::cout << "ofxCanonThread::start()" << std::endl;
 	callback = pCallback;
-	thread_ptr = boost::shared_ptr<boost::thread>(
-							new boost::thread(
-								boost::bind(&ofxCanonThread::run, this)
-				)
-	);
-	//thread_ptr->join();
+	#ifdef CANON_TARGET_WIN32
+		thread_handle = (HANDLE)_beginthread(ofxCanonThread::startThread,0,this);
+		std::cout << "Started a windows thread!" <<std::endl;
+	#else
+		thread_ptr = boost::shared_ptr<boost::thread>(
+								new boost::thread(
+									boost::bind(&ofxCanonThread::run, this)
+					)
+		);
+	#endif
 }
 
 void ofxCanonThread::run() {
+	#ifdef CANON_TARGET_WIN32
+		CoInitializeEx( NULL, COINIT_MULTITHREADED );
+		std::cout << "ofxCanonThread:: initialized COM" << std::endl;
+	#endif
 	std::cout << "ofxCanonThread::run()" << std::endl;
 	//canon.init(0, ofToDataPath("images/"));
+
+
 	while(1) {
 		if(ofGetElapsedTimeMillis() > should_check_on) {
 			std::cout << "ofxCanonThread: check connection!" << std::endl;
@@ -41,33 +53,36 @@ void ofxCanonThread::run() {
 	//	std::cout << "ofxCanonThread....." << std::endl;
 	//	ofSleepMillis(300);
 		if(canon.isInitialized())
-			canon.update();		
+			canon.update();
 	}
+	#ifdef CANON_TARGET_WIN32
+	//	CoUninitialize();
+	#endif
 }
 
 
 void ofxCanonThread::addActionSource(ofxActionSource* pSource) {
-	mutex_.lock();
+	lock();
 		pSource->addActionListener(canon.controller);
-	mutex_.unlock();
+	unlock();
 }
 void ofxCanonThread::addModelObserver(ofxObserver* pObserver) {
-	mutex_.lock();
+	lock();
 		canon.model->addObserver(pObserver);
-	mutex_.unlock();
+	unlock();
 }
 
 void ofxCanonThread::setDownloadDir(string sDir) {
-	mutex_.lock();
+	lock();
 		canon.model->setDownloadDir(sDir);
-	mutex_.unlock();
+	unlock();
 }
 
 void ofxCanonThread::startEvf() {
-	mutex_.lock();
+	lock();
 		cout << "startedEvf" << std::endl;
 		canon.startEvf();
-	mutex_.unlock();
+	unlock();
 }
 
 void ofxCanonThread::checkConnection() {
@@ -89,4 +104,18 @@ void ofxCanonThread::checkConnection() {
 
 ofxCanon* ofxCanonThread::getCanon() {
 	return &canon;
+}
+
+void ofxCanonThread::lock() {
+	#ifdef CANON_TARGET_WIN32
+	#else
+		mutex_.lock();
+	#endif
+}
+
+void ofxCanonThread::unlock() {
+	#ifdef CANON_TARGET_WIN32
+	#else
+		mutex_.unlock();
+	#endif
 }
