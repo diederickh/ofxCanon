@@ -11,12 +11,12 @@ public:
 		:ofxCanonCommand(sName, pModel)
 	{
 	}
-	
+
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 		EdsUInt32 evf_mode = model->getEvfMode();
 		cout << "ofxCanon: (command) execute startEVF" << std::endl;
-		// Change settings because live view cannot be started when 
+		// Change settings because live view cannot be started when
 		// camera settings are set to "do not perform live view"
 		if(evf_mode == 0) {
 			evf_mode = 1;
@@ -28,7 +28,7 @@ public:
 								,&evf_mode
 			);
 		}
-		
+
 		// Add PC as output device
 		if (err == EDS_ERR_OK) {
 			EdsUInt32 device = model->getEvfOutputDevice();
@@ -40,9 +40,8 @@ public:
 								,sizeof(device)
 								,&device
 			);
-			
 		}
-		
+
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			if(err == EDS_ERR_DEVICE_BUSY) {
@@ -51,7 +50,7 @@ public:
 			}
 			else {
 				cout << "ERROR: in ofxCanonCommandStartEvf " <<  ofxCanonErrorToString(err) << std::endl;
-				
+
 			}
 		}
 		cout << "ofxCanon: (command) started EVF" << std::endl;

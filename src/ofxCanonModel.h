@@ -7,9 +7,10 @@
 using namespace std;
 class ofxCanonModel : public ofxObservable {
 public:
-	ofxCanonModel(EdsCameraRef oCamera)
-		:camera(oCamera)
-		,tv(0)
+	//ofxCanonModel(EdsCameraRef oCamera)
+		//:camera(oCamera)
+	ofxCanonModel()
+		:tv(0)
 		,av(0)
 		,iso(0)
 		,metering_mode(0)

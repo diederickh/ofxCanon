@@ -1,11 +1,24 @@
 #include "ofxCanonController.h"
 #include "ofxCanon.h"
+	/*
 	ofxCanonController::ofxCanonController(ofxCanon* pCanon, ofxCanonModel* pModel)
 		:canon(pCanon)
 		,model(pModel)
 		,is_running(false)
 	{
 
+	}
+	*/
+	ofxCanonController::ofxCanonController()
+		:canon(NULL)
+		,model(NULL)
+		,is_running(false)
+	{
+
+	}
+	void ofxCanonController::init(ofxCanon* pCanon, ofxCanonModel* pModel) {
+		canon = pCanon;
+		model = pModel;
 	}
 
 	void ofxCanonController::shutdown() {
@@ -17,7 +30,7 @@
 			processor.remove("download_evf");
 
 			processor.update();
-			
+
 			printf("Processor not ready yet..\n");
 			//sleep(1);
 			ofSleepMillis(10);
@@ -29,7 +42,7 @@
 		is_running = true;
 		cout << "start the thread\n";
 		//processor.startThread(false,false);
-		//processor.start();
+		processor.start();
 		addCommand(new ofxCanonCommandOpenSession("open_session", model));
 		//addCommand(new ofxCanonCommandGetProperty("get_property", model, kEdsPropID_ProductName));
 		//StoreAsync(new GetPropertyCommand(_model, kEdsPropID_ProductName));
