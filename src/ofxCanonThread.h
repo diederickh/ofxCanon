@@ -29,7 +29,7 @@ public:
 	void addModelObserver(ofxObserver* pObserver);
 	void setDownloadDir(string sDir);
 	void startEvf();
-
+	void endEvf();
 private:
 	ofxCanon canon;
 	ofxCanonThreadCallback* callback;

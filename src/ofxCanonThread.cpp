@@ -70,6 +70,14 @@ void ofxCanonThread::startEvf() {
 	mutex_.unlock();
 }
 
+
+void ofxCanonThread::endEvf() {
+	mutex_.lock();
+		cout << "endEvf" << std::endl;
+		canon.endEvf();
+	mutex_.unlock();
+}
+
 void ofxCanonThread::checkConnection() {
 	if(!canon.isInitialized() && !canon.isInitializing()) {
 		std::cout << "ofxCanonThread.checkConnection(), call init()" << std::endl;
