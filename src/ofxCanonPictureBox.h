@@ -107,14 +107,13 @@ public:
 
 	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 		std::string event = pEvent->getEvent();
-		std::cout << "ofxCanon: ofxCanonPictureBox: got event: " << event << std::endl;
+		//std::cout << "ofxCanon: ofxCanonPictureBox: got event: " << event << std::endl;
 
 		if(event == "evf_data_changed") {
-			std::cout << "ofxCanon: ofxCanonPictureBox: evf_data_changed." << std::endl;
+			//std::cout << "ofxCanon: ofxCanonPictureBox: evf_data_changed." << std::endl;
 			EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
 			EdsUInt32 length;
             EdsGetLength(data->stream, &length);
-
 
 			if(length > 0) {
 				// @todo we don't really need data_size as we've got length
@@ -150,9 +149,9 @@ public:
 			EdsUInt32 device = model->getEvfOutputDevice();
 
 			if(property_id == kEdsPropID_Evf_OutputDevice) {
-				std::cout << "ofxCanon: ofxCanonPictureBox: got outputdevice changed event." << std::endl;
+				//std::cout << "ofxCanon: ofxCanonPictureBox: got outputdevice changed event." << std::endl;
 				if(!active && (device & kEdsEvfOutputDevice_PC) != 0) {
-					std::cout << "ofxCanon: ofxCanonPictureBox: fire download_evf event!." << std::endl;
+					//std::cout << "ofxCanon: ofxCanonPictureBox: fire download_evf event!." << std::endl;
 					active = true;
 					fireEvent("download_evf");
 				}

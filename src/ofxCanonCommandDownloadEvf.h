@@ -28,7 +28,7 @@ public:
 		EdsEvfImageRef evf_image = NULL;
 		EdsStreamRef stream = NULL;
 		EdsUInt32 buffer_size = 2 * 1024 * 1024;
-	std::cout << "downloadEvf+++++++++++++++++++++++++++++\n";
+		//std::cout << "downloadEvf+++++++++++++++++++++++++++++\n";
 		// Exit unless during live view
 		if ((model->getEvfOutputDevice() & kEdsEvfOutputDevice_PC) == 0) {
 			//cout << "CANON: Don't download anymore as we're ready." << std::endl;
@@ -101,7 +101,7 @@ public:
 			model->setEvfZoomRect(data_set.zoomRect);
 			*/
 			if(err == EDS_ERR_OK) {
-				cout << "in ofxCanonCommandDownloadEvf: downloaded! " << std::endl;
+				//cout << "in ofxCanonCommandDownloadEvf: downloaded! " << std::endl;
 				ofxObservableEvent e("evf_data_changed", &data_set);
 				model->notifyObservers(&e);
 			}

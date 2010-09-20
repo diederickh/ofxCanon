@@ -161,16 +161,16 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			openSession();
 		}
 	}
-
+	std::cout << "ofxCanon: init() ready" << std::endl;
 	return true;
 }
-
+/*
 void ofxCanon::threadedFunction() {
 	while(1) {
 		update();
 	};
 }
-
+*/
 
 void ofxCanon::update() {
 	if(controller != NULL) {
@@ -231,6 +231,7 @@ void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 	// sometimes the camera gives an internal error, here we "restart" the
 	// connections/sdk which seems to work.
 	if(pEvent->getEvent() == "internal_error") {
+		std::cout << "ofxCanon: handling internal_error: reset init." <<std::endl;
 		closeSession();
 		resetInit();
 	}

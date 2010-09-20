@@ -16,7 +16,8 @@
 #include <map>
 #include <string>
 
-class ofxCanon : public ofxThread, public ofxObserver {
+//class ofxCanon : public ofxThread, public ofxObserver {
+class ofxCanon : public ofxObserver {
 public:
 	ofxCanonModel* model;
 	ofxCanonController* controller;
@@ -24,7 +25,7 @@ public:
 	ofxCanon();
 	~ofxCanon();
 	void update();
-	virtual void threadedFunction();
+	//virtual void threadedFunction();
 	bool init(int nCameraID, string sDownloadDir);
 	bool isInitializing();
 	void shutdown();

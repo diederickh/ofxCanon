@@ -26,7 +26,7 @@
 		//processor.startThread(false,false);
 		//processor.start();
 		addCommand(new ofxCanonCommandOpenSession("open_session", model));
-		addCommand(new ofxCanonCommandGetProperty("get_property", model, kEdsPropID_ProductName));
+		//addCommand(new ofxCanonCommandGetProperty("get_property", model, kEdsPropID_ProductName));
 		//StoreAsync(new GetPropertyCommand(_model, kEdsPropID_ProductName));
 	}
 
