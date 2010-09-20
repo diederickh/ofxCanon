@@ -127,6 +127,7 @@ public:
 				model->notifyObservers(&e);
 			}
 			else if(err == EDS_ERR_OBJECT_NOTREADY) {
+				ofSleepMillis(200);
 				return false;
 			}
 		}

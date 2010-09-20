@@ -10,7 +10,7 @@ public:
 		:ofxCanonCommand(sName,pModel)
 	{
 	}
-	
+
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 
@@ -19,13 +19,13 @@ public:
 			,kEdsCameraCommand_TakePicture
 			,0
 		);
-		
+		std::cout << "ofxCanon: (command) take picture!" << std::endl;
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
 			if(err == EDS_ERR_DEVICE_BUSY)
 				cout << "ERR_MSG: Device is busy\n";
-			 // when we return false we keep on trying until it works; 
+			 // when we return false we keep on trying until it works;
 			 // sometimes this is not helpfull (i.e. when shutting down the
 			 // camera)
 			//return false;
