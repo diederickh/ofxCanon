@@ -22,6 +22,7 @@ public:
 		ofxCanonController* controller = (ofxCanonController *)inContext;
 		switch(inEvent) {
 			case kEdsObjectEvent_DirItemRequestTransfer:
+				std::cout << "ofxCanon: (eventlistener): fire download event" << std::endl;
 				fireEvent(controller, "download", inRef);
 				break;
 			default: {

@@ -33,7 +33,7 @@ public:
 		EdsStreamRef stream = NULL;
 		EdsDirectoryItemInfo dir_item_info;
 		err = EdsGetDirectoryItemInfo(dir_item, &dir_item_info);
-
+		std::cout << "ofxCanon: (command), download picture." << std::endl;
 		if(err == EDS_ERR_OK) {
 			// @todo notify download start event
 		}

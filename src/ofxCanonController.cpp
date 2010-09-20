@@ -60,6 +60,7 @@
 				addCommand(new ofxCanonCommandKeepAlive("keep_alive", model));
 		}
 		if(command == "download") {
+			std::cout << "ofxCanon: (controller) got download action" << std::endl;
 			addCommand(new ofxCanonCommandDownload(
 									"download"
 									,model
