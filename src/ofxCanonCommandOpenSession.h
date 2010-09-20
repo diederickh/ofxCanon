@@ -64,7 +64,7 @@ public:
 			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
 			ofxObservableEvent e("internal_error");
 			model->notifyObservers(&e);
-			return false;
+			return true;
 			//model->setSessionOpen(false);
 		}
 		else {

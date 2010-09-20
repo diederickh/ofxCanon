@@ -105,6 +105,8 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 
 		if(model == NULL) {
 			model = new ofxCanonModel(camera);
+			std::cout << "SET DOWNLOAD DIR: "<< sDownloadDir << std::endl;
+			model->setDownloadDir(sDownloadDir);
 		}
 		else
 			model->setCamera(camera);
@@ -113,8 +115,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			controller = new ofxCanonController(this, model);
 		}
 
-		std::cout << "SET DOWNLOAD DIR: "<< sDownloadDir << std::endl;
-		model->setDownloadDir(sDownloadDir);
+
 
 		// Set property event handler.
 		if (err == EDS_ERR_OK) {
@@ -231,6 +232,7 @@ void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 	// sometimes the camera gives an internal error, here we "restart" the
 	// connections/sdk which seems to work.
 	if(pEvent->getEvent() == "internal_error") {
+		std::cout << "ofxCanon: reset initialization phase..." << std::endl;
 		closeSession();
 		resetInit();
 	}
