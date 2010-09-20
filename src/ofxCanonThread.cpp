@@ -10,6 +10,7 @@ ofxCanonThread::ofxCanonThread()
 
 ofxCanonThread::~ofxCanonThread() {
 	std::cout << "~~~~ ofxCanonThread." <<std::endl;
+	canon.shutdown(); // we need to call this as the thread will continue as long as there are commands..
 }
 
 
@@ -18,9 +19,10 @@ void ofxCanonThread::start(ofxCanonThreadCallback* pCallback) {
 	callback = pCallback;
 	thread_ptr = boost::shared_ptr<boost::thread>(
 							new boost::thread(
-								boost::bind(&ofxCanonThread::run, shared_from_this()	)
-							)
+								boost::bind(&ofxCanonThread::run, this)
+				)
 	);
+	//thread_ptr->join();
 }
 
 void ofxCanonThread::run() {
@@ -42,6 +44,7 @@ void ofxCanonThread::run() {
 			canon.update();		
 	}
 }
+
 
 void ofxCanonThread::addActionSource(ofxActionSource* pSource) {
 	mutex_.lock();

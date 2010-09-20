@@ -14,7 +14,7 @@ public:
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 		err = EdsCloseSession(model->getCamera());
-		std::cout << "ofxCanon: closing session." << std::endl;
+		std::cout << "ofxCanon: (command) closing session." << std::endl;
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;

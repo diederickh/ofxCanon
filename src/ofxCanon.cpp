@@ -18,7 +18,7 @@ void ofxCanon::shutdown() {
 	if(evf_started)
 		endEvf();
 	if(model->isSessionOpen())
-		closeSession();
+		closeSession(); 
 	if(controller != NULL)
 		controller->shutdown();
 	if(is_sdk_loaded) {

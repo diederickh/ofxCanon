@@ -15,7 +15,7 @@ public:
 
 	virtual bool execute() {
 
-		cout << "ofxCanon: execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
+		cout << "ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
 		EdsError err = EDS_ERR_OK;
 		err = EdsOpenSession(model->getCamera());
 		bool locked = false;

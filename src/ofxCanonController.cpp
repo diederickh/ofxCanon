@@ -9,10 +9,15 @@
 	}
 
 	void ofxCanonController::shutdown() {
-		processor.remove("get_property");
-		processor.remove("download_evf");
+		//processor.remove("get_property");
+		//processor.remove("download_evf");
+		//processor.shutdown();
 		while(!processor.isReady()) {
+			processor.remove("get_property");
+			processor.remove("download_evf");
+
 			processor.update();
+			
 			printf("Processor not ready yet..\n");
 			//sleep(1);
 			ofSleepMillis(10);
@@ -35,7 +40,7 @@
 	}
 
 	bool ofxCanonController::isRunning() {
-		return is_running;
+		return                                                ;
 	}
 
 	void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
@@ -66,7 +71,7 @@
 		}
 		if(command == "start_evf") {
 			addCommand(new ofxCanonCommandStartEvf("start_evf", model));
-			addCommand(new ofxCanonCommandDownloadEvf("download_evf",model));
+			//addCommand(new ofxCanonCommandDownloadEvf("download_evf",model));
 		}
 		if(command == "end_evf") {
 			addCommand(new ofxCanonCommandEndEvf("end_evf",model));

@@ -15,7 +15,7 @@ public:
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 		EdsUInt32 evf_mode = model->getEvfMode();
-		cout << "ofxCanon: execute startEVF" << std::endl;
+		cout << "ofxCanon: (command) execute startEVF" << std::endl;
 		// Change settings because live view cannot be started when 
 		// camera settings are set to "do not perform live view"
 		if(evf_mode == 0) {
@@ -54,7 +54,7 @@ public:
 				
 			}
 		}
-		cout << "ofxCanon: started EVF" << std::endl;
+		cout << "ofxCanon: (command) started EVF" << std::endl;
 		return true;
 	}
 };
