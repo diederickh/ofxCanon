@@ -54,7 +54,7 @@ class JPEGImage : public ofImage{
         bpp 		= FreeImage_GetBPP(tmpBmp);
 
         swapRgb(myPixels);
-		
+
 		//setFromPixels(getPixels(), width,height, OF_IMAGE_COLOR);
         FreeImage_Unload(tmpBmp);
         FreeImage_CloseMemory(hmem);
@@ -98,22 +98,24 @@ public:
 	ofxCanonPictureBox(ofxCanon* pCanon)
 		:canon(pCanon)
 		,active(false)
-		,pixels(NULL) 
+		,pixels(NULL)
 		,frame(0)
 		,resized_frame(0)
 	{
-	
+
 	}
-	
+
 	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 		std::string event = pEvent->getEvent();
-		if(event == "evf_data_changed") {
+		std::cout << "ofxCanon: ofxCanonPictureBox: got event: " << event << std::endl;
 
+		if(event == "evf_data_changed") {
+			std::cout << "ofxCanon: ofxCanonPictureBox: evf_data_changed." << std::endl;
 			EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
 			EdsUInt32 length;
             EdsGetLength(data->stream, &length);
-		
-			
+
+
 			if(length > 0) {
 				// @todo we don't really need data_size as we've got length
 				//cout << "length: " << length << ", data_size: " << data_size << std::endl;
@@ -121,7 +123,7 @@ public:
 				EdsUInt32 data_size = length;
 				EdsGetPointer(data->stream, (EdsVoid**)&image_data);
 				EdsGetLength(data->stream, &data_size);
-				
+
 				if(jpeg.loadFromMemory((int)data_size, image_data,1)) {
 					frame++;
 					int w = jpeg.width;
@@ -138,16 +140,19 @@ public:
 			EdsInt32 prop_id = kEdsPropID_FocusInfo;
 			fireEvent("get_property", &prop_id);
 			fireEvent("download_evf");
-		
+
 		}
 		else if(event == "property_changed") {
+
 			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent->getArg());
-			
+
 			ofxCanonModel* model = (ofxCanonModel *)pFrom;
 			EdsUInt32 device = model->getEvfOutputDevice();
-			
+
 			if(property_id == kEdsPropID_Evf_OutputDevice) {
+				std::cout << "ofxCanon: ofxCanonPictureBox: got outputdevice changed event." << std::endl;
 				if(!active && (device & kEdsEvfOutputDevice_PC) != 0) {
+					std::cout << "ofxCanon: ofxCanonPictureBox: fire download_evf event!." << std::endl;
 					active = true;
 					fireEvent("download_evf");
 				}
@@ -157,7 +162,7 @@ public:
 			}
 		}
 	}
-	
+
 	void draw(float nX, float nY, float nWidth, float nHeight) {
 		glColor3f(1.0f, 1.0f, 1.0f);
 		// this is a silly thing we have to do, else the texture data

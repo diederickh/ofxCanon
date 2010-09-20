@@ -7,27 +7,27 @@
 #include "ofMain.h"
 
 class ofxCanonCommandDownload : public ofxCanonCommand {
-private:	
+private:
 	EdsDirectoryItemRef dir_item;
-	
+
 public:
 	ofxCanonCommandDownload(
 					std::string sName
 					,ofxCanonModel* pModel
 					,EdsDirectoryItemRef oDirItem
-					
+
 		):dir_item(oDirItem)
 		,ofxCanonCommand(sName,pModel)
 	{
 	}
-	
+
 	virtual ~ofxCanonCommandDownload() {
 		if(dir_item != NULL) {
 			EdsRelease(dir_item);
 			dir_item = NULL;
 		}
 	}
-	
+
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 		EdsStreamRef stream = NULL;
@@ -37,15 +37,18 @@ public:
 		if(err == EDS_ERR_OK) {
 			// @todo notify download start event
 		}
-		
+
 		string filename = dir_item_info.szFileName;
-		
+
 		// Make the filestream at the forwarding destination (default to PC)
 		if(err == EDS_ERR_OK) {
+			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();
+			cout << "DOWNLOAD TO: " << dir << std::endl;
 			dir = dir + dir_item_info.szFileName;
 			const char* dest = dir.c_str();
+			cout << "SAVE DEST: "<< dest << std::endl;
 			err = EdsCreateFileStream(
 				dest
 				,kEdsFileCreateDisposition_CreateAlways
@@ -53,7 +56,7 @@ public:
 				,&stream
 			);
 		}
-		
+
 		// Set progress
 		if(err == EDS_ERR_OK) {
 			err = EdsSetProgressCallback(
@@ -63,21 +66,21 @@ public:
 				,this
 			);
 		}
-		
+
 		// Download image
-		if(err == EDS_ERR_OK) 
+		if(err == EDS_ERR_OK)
 			err = EdsDownload(dir_item, dir_item_info.size, stream);
-		
+
 		// Forwarding completion
-		if (err == EDS_ERR_OK) 
+		if (err == EDS_ERR_OK)
 			err = EdsDownloadComplete(dir_item);
-			
+
 		// Release item.
 		if(dir_item != NULL) {
 			err = EdsRelease(dir_item);
 			dir_item = NULL;
 		}
-		
+
 		// Release stream
 		if (stream != NULL) {
 			err = EdsRelease(stream);
@@ -97,7 +100,7 @@ public:
 
 		return true;
 	}
-	
+
 private:
 
 	static EdsError EDSCALLBACK ProgressFunc (

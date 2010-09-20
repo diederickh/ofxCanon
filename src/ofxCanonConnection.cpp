@@ -3,6 +3,7 @@
 ofxCanonConnection::ofxCanonConnection(
 	ofxCanon& rCanon
 	,int nCamID
+	,string sDownloadDir
 	,float fTimeOut
 ):canon(rCanon)
 ,cam_id(nCamID)
@@ -11,7 +12,9 @@ ofxCanonConnection::ofxCanonConnection(
 ,was_initialized(false)
 ,times_initialized(0)
 ,should_check_on(0)
+,download_dir(sDownloadDir)
 {
+	std::cout << "dldir " << download_dir << std::endl;
 	//setup();
 }
 
@@ -48,9 +51,10 @@ void ofxCanonConnection::start(ofxCanonConnectionCallback* rCallback) {
 void ofxCanonConnection::checkConnection() {
 //void ofxCanonConnection::timerCallback(const boost::system::error_code& rError) {
 	if(!canon.isInitialized() && !canon.isInitializing()) {
-		canon.init(cam_id);
+		std::cout << "init with : " << download_dir << std::endl;
+		canon.init(cam_id, download_dir);
 		was_initialized = false;
-		
+
 	}
 	else {
 		if(!was_initialized) {

@@ -5,7 +5,7 @@
 #include "ofxObservableEvent.h"
 #include "ofxCanonDebug.h"
 
-typedef struct _EVF_DATASET 
+typedef struct _EVF_DATASET
 {
 	EdsStreamRef	stream; // JPEG stream.
 	EdsUInt32		zoom;
@@ -22,34 +22,34 @@ public:
 		:ofxCanonCommand(sName,pModel)
 	{
 	}
-	
+
 	virtual bool execute() {
 		EdsError err = EDS_ERR_OK;
 		EdsEvfImageRef evf_image = NULL;
 		EdsStreamRef stream = NULL;
 		EdsUInt32 buffer_size = 2 * 1024 * 1024;
-		
+	std::cout << "downloadEvf+++++++++++++++++++++++++++++\n";
 		// Exit unless during live view
 		if ((model->getEvfOutputDevice() & kEdsEvfOutputDevice_PC) == 0) {
 			//cout << "CANON: Don't download anymore as we're ready." << std::endl;
 			return true;
 		}
-		
+
 		err = EdsCreateMemoryStream(buffer_size, &stream);
-		
-		if(err == EDS_ERR_OK) 
+
+		if(err == EDS_ERR_OK)
 			err = EdsCreateEvfImageRef(stream, &evf_image);
-			
+
 		if(err == EDS_ERR_OK)
 			err = EdsDownloadEvfImage(model->getCamera(), evf_image);
-			
+
 		if(err == EDS_ERR_OK) {
 			EVF_DATASET data_set = {0};
 			data_set.stream = stream;
 			//ofxObservableEvent e("evf_data_changed", &data_set);
 			//model->notifyObservers(&e);
-			
-			// @todo do we need to get all these specs? 
+
+			// @todo do we need to get all these specs?
 			// Get magnification ratio (x1, x5 or x10)
 			/*
 			EdsGetPropertyData(
@@ -59,7 +59,7 @@ public:
 							,sizeof(data_set.zoom)
 							,&data_set.zoom
 			);
-			
+
 			// Get position of image data (when enlarging)
 			EdsGetPropertyData(
 							evf_image
@@ -95,30 +95,30 @@ public:
 							,sizeof(data_set.sizeJpegLarge)
 							,&data_set.sizeJpegLarge
 			);
-			
+
 			model->setEvfZoom(data_set.zoom);
 			model->setEvfZoomPosition(data_set.zoomRect.point);
 			model->setEvfZoomRect(data_set.zoomRect);
 			*/
 			if(err == EDS_ERR_OK) {
+				cout << "in ofxCanonCommandDownloadEvf: downloaded! " << std::endl;
 				ofxObservableEvent e("evf_data_changed", &data_set);
 				model->notifyObservers(&e);
 			}
-			
 		}
-		
+
 		if(stream != NULL) {
 			EdsRelease(stream);
 			stream = NULL;
 		}
-		
-		
+
+
 		if(evf_image != NULL) {
 			EdsRelease(evf_image);
 			evf_image = NULL;
 		}
-		
-		
+
+
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;

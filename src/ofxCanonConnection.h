@@ -22,7 +22,7 @@ public:
 //class ofxCanonConnection : public boost::enable_shared_from_this<ofxCanonConnection>{
 class ofxCanonConnection {
 public:
-	ofxCanonConnection(ofxCanon& rCanon, int nCamID, float fTimeOut = 5.0f);
+	ofxCanonConnection(ofxCanon& rCanon, int nCamID, string sDownloadDir, float fTimeOut = 5.0f);
 	~ofxCanonConnection();
 	void start(ofxCanonConnectionCallback* rCallback);
 	void update();
@@ -38,7 +38,7 @@ private:
 	bool was_initialized;
 	int cam_id;
 	int should_check_on;
-	
+	string download_dir;
 	float timeout;
 //	boost::asio::io_service io;
 //	boost::asio::deadline_timer timer;

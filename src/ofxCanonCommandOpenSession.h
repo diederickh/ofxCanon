@@ -4,6 +4,7 @@
 #include "ofxCanonCommand.h"
 #include "ofxCanonDebug.h"
 #include <boost/thread.hpp>
+#include "ofMain.h"
 
 class ofxCanonCommandOpenSession : public ofxCanonCommand {
 public:
@@ -11,14 +12,14 @@ public:
 		:ofxCanonCommand(sName,pModel)
 	{
 	}
-	
+
 	virtual bool execute() {
-	
+
 		cout << "ofxCanon: execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
 		EdsError err = EDS_ERR_OK;
 		err = EdsOpenSession(model->getCamera());
 		bool locked = false;
-		
+
 		if(err == EDS_ERR_OK) {
 			// Preservation ahead is set to PC
 			EdsUInt32 save_to = kEdsSaveTo_Host;
@@ -30,7 +31,7 @@ public:
 				,&save_to
 			);
 		}
-	
+
 		// Lock UI
 		if(err == EDS_ERR_OK) {
 			err = EdsSendStatusCommand(
@@ -39,16 +40,16 @@ public:
 				,0
 			);
 		}
-		
+
 		if (EDS_ERR_OK)
 			locked = true;
-		
+
 		if (err == EDS_ERR_OK) {
 			EdsCapacity capacity = {0x7FFFFFFF, 0x1000, 1};
 			err = EdsSetCapacity(model->getCamera(), capacity);
 		}
 
-		
+
 		// Unlock UI
 		if (locked) {
 			err = EdsSendStatusCommand(
@@ -57,7 +58,7 @@ public:
 				,0
 			);
 		}
-		
+
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << std::endl;

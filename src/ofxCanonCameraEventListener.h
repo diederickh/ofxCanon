@@ -7,18 +7,18 @@
 
 class ofxCanonCameraEventListener {
 public:
-	
+
 	static EdsError EDSCALLBACK handleObjectEvent(
 		EdsUInt32		inEvent
 		,EdsBaseRef		inRef
 		,EdsVoid*		inContext
-	) 
+	)
 	{
-		/*
+
 		cout	<< "CAMERA_EVENT: handleObjectEvent: "
 				<< ofxCanonEventToString(inEvent)
 				<< std::endl;
-		*/
+
 		ofxCanonController* controller = (ofxCanonController *)inContext;
 		switch(inEvent) {
 			case kEdsObjectEvent_DirItemRequestTransfer:
@@ -33,28 +33,28 @@ public:
 		}
 		return EDS_ERR_OK;
 	}
-	
+
 	static EdsError EDSCALLBACK handlePropertyEvent(
 		EdsUInt32		inEvent
 		,EdsUInt32		inPropertyID
 		,EdsUInt32		inParam
-		,EdsVoid* 		inContext				
+		,EdsVoid* 		inContext
 	)
 	{
-		/*
+
 		cout	<< "CAMERA_EVENT: handlePropertyEvent: "
-				<< inPropertyID << " " 
+				<< inPropertyID << " "
 				<< ofxCanonEventToString(inEvent, 0, inPropertyID)
 				<< std::endl;
-		*/		
+
 		ofxCanonController* controller = (ofxCanonController*)inContext;
-		
+
 		switch(inEvent) {
 			case kEdsPropertyEvent_PropertyChanged:
 				// @todo Do we need to handle this?
 				fireEvent(controller, "get_property", &inPropertyID);
 				break;
-			
+
 			case kEdsPropertyEvent_PropertyDescChanged:
 				// @todo Do we need to handle this? (update the model?)
 				break;
@@ -62,19 +62,19 @@ public:
 		};
 		return EDS_ERR_OK;
 	}
-	
+
 	static EdsError EDSCALLBACK handleStateEvent(
 		EdsUInt32			inEvent
 		,EdsUInt32			inParam
 		,EdsVoid*			inContext
 	)
 	{
-		
-		/*
+
+
 		cout	<< "CAMERA_EVENT: handleStateEvent: "
 				<< ofxCanonEventToString(inEvent, inParam)
 				<< std::endl;
-		*/		
+
 		ofxCanonController* controller = (ofxCanonController*)inContext;
 		switch(inEvent) {
 			case kEdsStateEvent_WillSoonShutDown: {
@@ -92,17 +92,17 @@ public:
 		};
 		return EDS_ERR_OK;
 	}
-	
+
 private:
 	static void fireEvent(
 		ofxActionListener* pListener
 		,std::string sCommand
 		,void* pArg = 0
-	) 
+	)
 	{
 		ofxActionEvent event(sCommand, pArg);
 		pListener->actionPerformed(event);
-		
+
 	}
 };
 #endif

@@ -8,7 +8,7 @@ using namespace std;
 class ofxCanonModel : public ofxObservable {
 public:
 	ofxCanonModel(EdsCameraRef oCamera)
-		:camera(oCamera) 
+		:camera(oCamera)
 		,tv(0)
 		,av(0)
 		,iso(0)
@@ -24,10 +24,10 @@ public:
 	{
 		memset(&focus_info, 0, sizeof(focus_info));
 	}
-	
+
 	EdsCameraRef getCamera() const			{ return  camera; }
 	EdsUInt32 getEvfMode()					{ return evf_mode; }
-	
+
 	// Taking a picture parameter
 	void setTv( EdsUInt32 nTV )							{ tv					= nTV;				}
 	void setAv( EdsUInt32 nAV )							{ av					= nAV;				}
@@ -46,10 +46,10 @@ public:
 	void setAEMode(EdsUInt32 nAEMode)					{ ae_mode				= nAEMode;			}
 	void setKeepAlive(bool bKeepAlive)					{ keep_alive			= bKeepAlive;		}
 	void setModelName(EdsChar *sModelName)				{ strcpy(model_name, sModelName);			}
-	void setDownloadDir(string sDir)					{ download_dir			= download_dir;		}
+	void setDownloadDir(string sDir)					{ download_dir			= sDir;				}
 	void setCamera(EdsCameraRef oCamera)				{ camera				= oCamera;			}
 	void setSessionOpen(bool bIsSessionOpen)			{ session_open			= bIsSessionOpen;	}
-	
+
 	// Taking a picture parameter
 	EdsUInt32 getAEMode() const							{ return ae_mode;				}
 	EdsUInt32 getTv() const								{ return tv;					}
@@ -61,48 +61,50 @@ public:
 	EdsUInt32 getEvfMode() const						{ return evf_mode;				}
 	EdsUInt32 getEvfOutputDevice() const				{ return evf_output_device;		}
 	EdsUInt32 getEvfDepthOfFieldPreview() const			{ return evf_dof;				}
-	EdsUInt32 getEvfZoom() const						{ return evf_zoom;				}	
-	EdsPoint  getEvfZoomPosition() const				{ return evf_zoom_position;		}	
-	EdsRect	  getEvfZoomRect() const					{ return evf_zoom_rect;			}	
+	EdsUInt32 getEvfZoom() const						{ return evf_zoom;				}
+	EdsPoint  getEvfZoomPosition() const				{ return evf_zoom_position;		}
+	EdsRect	  getEvfZoomRect() const					{ return evf_zoom_rect;			}
 	EdsUInt32 getEvfAFMode() const						{ return evf_af_mode;			}
 	EdsFocusInfo getFocusInfo()const					{ return focus_info;			}
 	EdsChar	*getModelName()								{ return model_name;			}
 	bool	getKeepAlive()	const						{ return keep_alive;			}
 	string	getDownloadDir() const						{ return download_dir;			}
 	bool	isSessionOpen() const						{ return session_open;			}
-	
 
-	
+
+
 	void setPropertyUint32(EdsUInt32 nPropertyID, EdsUInt32 nValue) {
 		switch(nPropertyID) {
 			case kEdsPropID_AEMode:					setAEMode(nValue);					break;
-			case kEdsPropID_Tv:						setTv(nValue);						break;		               
-			case kEdsPropID_Av:						setAv(nValue);						break;           	  
-			case kEdsPropID_ISOSpeed:				setIso(nValue);						break;       
-			case kEdsPropID_MeteringMode:			setMeteringMode(nValue);			break;       
+			case kEdsPropID_Tv:						setTv(nValue);						break;
+			case kEdsPropID_Av:						setAv(nValue);						break;
+			case kEdsPropID_ISOSpeed:				setIso(nValue);						break;
+			case kEdsPropID_MeteringMode:			setMeteringMode(nValue);			break;
 			case kEdsPropID_ExposureCompensation:	setExposureCompensation(nValue);	break;
 			case kEdsPropID_ImageQuality:			setImageQuality(nValue);			break;
 			case kEdsPropID_Evf_Mode:				setEvfMode(nValue);					break;
 			case kEdsPropID_Evf_OutputDevice:		setEvfOutputDevice(nValue);			break;
-			case kEdsPropID_Evf_DepthOfFieldPreview:setEvfDepthOfFieldPreview(nValue);	break;	
+			case kEdsPropID_Evf_DepthOfFieldPreview:setEvfDepthOfFieldPreview(nValue);	break;
 			case kEdsPropID_Evf_AFMode:				setEvfAFMode(nValue);				break;
 		}
 	}
-	
+
 	void setPropertyString(EdsUInt32 nPropertyID, EdsChar* pStr) {
+		/*
 		switch(nPropertyID) {
 			case kEdsPropID_ProductName:			setModelName(pStr);					break;
 		}
+		*/
 	}
-	
+
 	void setPropertyFocusInfo(EdsUInt32 nPropertyID, EdsFocusInfo oInfo) {
 		switch(nPropertyID) {
 			case kEdsPropID_FocusInfo:				setFocusInfo(oInfo);				break;
 		}
 	}
-	
+
 private:
-	
+
 	string			download_dir;
 	bool			keep_alive; // when set to true the controller should add  a keep alive command when we receive a shutdown event.
 	EdsCameraRef	camera;
@@ -116,7 +118,7 @@ private:
 	EdsUInt32		evf_mode;
 	EdsUInt32		evf_output_device;
 	EdsUInt32		evf_dof;
-	EdsUInt32		evf_zoom;						
+	EdsUInt32		evf_zoom;
 	EdsPoint		evf_zoom_position;
 	EdsRect			evf_zoom_rect;
 	EdsUInt32		evf_af_mode;

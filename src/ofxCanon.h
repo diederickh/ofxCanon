@@ -25,29 +25,30 @@ public:
 	~ofxCanon();
 	void update();
 	virtual void threadedFunction();
-	bool init(int nCameraID);
+	bool init(int nCameraID, string sDownloadDir);
 	bool isInitializing();
 	void shutdown();
 	void draw(float nX, float nY, float nWidth, float nHeight);
 	void takePicture();
 	void startEvf();
 	void endEvf();
-	inline bool isInitialized();
+	bool isInitialized();
 	void resetInit();
 	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent);
-
-protected:	
+	void closeSession();
 	bool openSession();
+protected:
+
 	bool initialized;
 	bool is_sdk_loaded;
 	bool is_initializing;
 	bool evf_started;
-	void closeSession();
+
 	void setupActionSources();
 	void setupObserver();
 	void addActionSource(std::string sCommand);
 	bool performAction(std::string sCommand);
 	std::map<std::string,ofxActionSource*> action_sources;
-	
+
 };
 #endif
