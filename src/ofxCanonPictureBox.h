@@ -46,7 +46,9 @@ class JPEGImage : public ofImage{
             FreeImage_Unload(oldBmp);
         }
 
-        //FreeImage_FlipVertical(tmpBmp);
+		// @todo make this a parameter
+        FreeImage_FlipVertical(tmpBmp);
+		//FreeImage_FlipHorizontal(tmpBmp);
         putBmpIntoPixels(tmpBmp, myPixels);
         width 		= FreeImage_GetWidth(tmpBmp);
         height 		= FreeImage_GetHeight(tmpBmp);
