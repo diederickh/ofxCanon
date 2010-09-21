@@ -28,10 +28,9 @@ public:
 		EdsEvfImageRef evf_image = NULL;
 		EdsStreamRef stream = NULL;
 		EdsUInt32 buffer_size = 2 * 1024 * 1024;
-		//std::cout << "(command) downloadEvf+++++++++++++++++++++++++++++\n";
+	
 		// Exit unless during live view
 		if ((model->getEvfOutputDevice() & kEdsEvfOutputDevice_PC) == 0) {
-			//cout << "CANON: Don't download anymore as we're ready." << std::endl;
 			return true;
 		}
 
@@ -46,9 +45,7 @@ public:
 		if(err == EDS_ERR_OK) {
 			EVF_DATASET data_set = {0};
 			data_set.stream = stream;
-			//ofxObservableEvent e("evf_data_changed", &data_set);
-			//model->notifyObservers(&e);
-
+		
 			// @todo do we need to get all these specs?
 			// Get magnification ratio (x1, x5 or x10)
 			/*
@@ -101,7 +98,6 @@ public:
 			model->setEvfZoomRect(data_set.zoomRect);
 			*/
 			if(err == EDS_ERR_OK) {
-				//cout << "in ofxCanonCommandDownloadEvf: downloaded! " << std::endl;
 				ofxObservableEvent e("evf_data_changed", &data_set);
 				model->notifyObservers(&e);
 			}

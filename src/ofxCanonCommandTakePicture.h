@@ -3,8 +3,6 @@
 
 #include "ofxCanonCommand.h"
 #include "ofxCanonDebug.h"
-#include <windows.h>
-#include <objbase.h>
 class ofxCanonCommandTakePicture : public ofxCanonCommand {
 public:
 	ofxCanonCommandTakePicture(std::string sName,ofxCanonModel* pModel)
@@ -13,17 +11,15 @@ public:
 	}
 
 	virtual bool execute() {
-
 		EdsError err = EDS_ERR_OK;
-		//CoInitializeEx( NULL, COINIT_APARTMENTTHREADED );
 		err = EdsSendCommand(
 			model->getCamera()
 			,kEdsCameraCommand_TakePicture
 			,0
 		);
-		//CoUninitialize();
+
 		std::cout << "ofxCanon: (command) take picture!" << std::endl;
-		// Show error:
+
 		if(err != EDS_ERR_OK) {
 			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
 			if(err == EDS_ERR_DEVICE_BUSY)
@@ -33,20 +29,7 @@ public:
 			 // camera)
 			//return false;
 		}
-
-		//HANDLE hThread = (HANDLE)_beginthread(&ofxCanonCommandTakePicture::threadProc, 0, model->getCamera());
-		// Block until finished
-		//::WaitForSingleObject( hThread, INFINITE );
 		return true;
-	}
-	static void threadProc(void* rCamRef) {
-		/*
-		EdsCameraRef camera = (EdsCameraRef)rCamRef;
-		CoInitializeEx( NULL, COINIT_APARTMENTTHREADED );
-		EdsSendCommand(camera, kEdsCameraCommand_TakePicture, 0);
-		CoUninitialize();
-		*/
-		//_endthread();
 	}
 };
 #endif

@@ -72,7 +72,6 @@ public:
 		}
 		ofxObservableEvent e("opened_session");
 		model->notifyObservers(&e);
-		cout << "Opened session..." << std::endl;
 		return true;
 	}
 };

@@ -47,7 +47,6 @@ class JPEGImage : public ofImage{
         }
 
         //FreeImage_FlipVertical(tmpBmp);
-
         putBmpIntoPixels(tmpBmp, myPixels);
         width 		= FreeImage_GetWidth(tmpBmp);
         height 		= FreeImage_GetHeight(tmpBmp);
@@ -55,7 +54,6 @@ class JPEGImage : public ofImage{
 
         swapRgb(myPixels);
 
-		//setFromPixels(getPixels(), width,height, OF_IMAGE_COLOR);
         FreeImage_Unload(tmpBmp);
         FreeImage_CloseMemory(hmem);
 
@@ -107,18 +105,14 @@ public:
 
 	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 		std::string event = pEvent->getEvent();
-		//std::cout << "ofxCanon: ofxCanonPictureBox: got event: " << event << std::endl;
-
 		if(event == "evf_data_changed") {
-			//std::cout << "ofxCanon: ofxCanonPictureBox: evf_data_changed." << std::endl;
 			EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
 			EdsUInt32 length;
             EdsGetLength(data->stream, &length);
 
 			if(length > 0) {
 				// @todo we don't really need data_size as we've got length
-				//cout << "length: " << length << ", data_size: " << data_size << std::endl;
-				unsigned char* image_data;
+						unsigned char* image_data;
 				EdsUInt32 data_size = length;
 				EdsGetPointer(data->stream, (EdsVoid**)&image_data);
 				EdsGetLength(data->stream, &data_size);
@@ -129,8 +123,7 @@ public:
 					int h = jpeg.height;
 					if(w > 0 && h > 0) {
 					}
-					//cout << ">> got frame: " << frame << ", width: " << jpeg.width << " height: " << jpeg.height << std::endl;
-				}
+						}
 				else {
 					std::cout << "#### error while converting to image" << std::endl;
 				}
@@ -144,14 +137,11 @@ public:
 		else if(event == "property_changed") {
 
 			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent->getArg());
-
 			ofxCanonModel* model = (ofxCanonModel *)pFrom;
 			EdsUInt32 device = model->getEvfOutputDevice();
 
 			if(property_id == kEdsPropID_Evf_OutputDevice) {
-				//std::cout << "ofxCanon: ofxCanonPictureBox: got outputdevice changed event." << std::endl;
 				if(!active && (device & kEdsEvfOutputDevice_PC) != 0) {
-					//std::cout << "ofxCanon: ofxCanonPictureBox: fire download_evf event!." << std::endl;
 					active = true;
 					fireEvent("download_evf");
 				}

@@ -45,10 +45,10 @@ public:
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();
-			cout << "DOWNLOAD TO: " << dir << std::endl;
+			cout << "ofxCanon:(command) download image to: " << dir << std::endl;
 			dir = dir + dir_item_info.szFileName;
 			const char* dest = dir.c_str();
-			cout << "SAVE DEST: "<< dest << std::endl;
+
 			err = EdsCreateFileStream(
 				dest
 				,kEdsFileCreateDisposition_CreateAlways

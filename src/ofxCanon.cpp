@@ -110,12 +110,6 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 		if(model != NULL)
 			model->setCamera(camera);
 
-		if(controller == NULL) {
-			//controller = new ofxCanonController(this, model);
-		}
-
-
-
 		// Set property event handler.
 		if (err == EDS_ERR_OK) {
 			err = EdsSetPropertyEventHandler(
@@ -173,13 +167,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 	std::cout << "ofxCanon: init() ready" << std::endl;
 	return true;
 }
-/*
-void ofxCanon::threadedFunction() {
-	while(1) {
-		update();
-	};
-}
-*/
+
 
 void ofxCanon::update() {
 	if(controller != NULL) {
@@ -195,7 +183,6 @@ bool ofxCanon::openSession() {
 
 void ofxCanon::closeSession() {
 	performAction("close_session");
-	//session_opened = false;
 }
 
 void ofxCanon::takePicture() {
@@ -249,9 +236,7 @@ void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 void ofxCanon::draw(float nX, float nY, float nWidth , float nHeight) {
 	// @todo use callback and set pixels when we got new pixels from
 	// the EVF or when a picture has been taken.
-	//lock();
 	picture_box->draw(nX, nY, nWidth, nHeight);
-	//unlock();
 }
 
 void ofxCanon::addActionSource(std::string sCommand) {

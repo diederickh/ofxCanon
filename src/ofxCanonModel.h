@@ -7,8 +7,6 @@
 using namespace std;
 class ofxCanonModel : public ofxObservable {
 public:
-	//ofxCanonModel(EdsCameraRef oCamera)
-		//:camera(oCamera)
 	ofxCanonModel()
 		:tv(0)
 		,av(0)
@@ -21,7 +19,7 @@ public:
 		,evf_dof(0)
 		,evf_zoom(0)
 		,keep_alive(true)
-		,download_dir("../../../data/images/") // end with slash! (defaulds for Mac app dir)
+		,download_dir("../../../data/images/") // end with slash! (defaults for Mac app dir)
 	{
 		memset(&focus_info, 0, sizeof(focus_info));
 	}

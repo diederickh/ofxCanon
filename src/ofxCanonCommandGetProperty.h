@@ -20,7 +20,7 @@ public:
 	):ofxCanonCommand(sName,pModel)
 	,property(nPropertyID)
 	{
-		//std::cout << "Created get_property command" << std::endl;
+	
 	}
 	
 	virtual bool execute() {
@@ -45,9 +45,6 @@ public:
 				//return false;				
 			}
 		}
-	//	std::string prop = ofxCanonPropertyToString(property);
-	//	std::cout << "Get property: " << prop << std::endl;
-
 		return true;
 	}
 	
@@ -139,15 +136,6 @@ private:
 		if(err == EDS_ERR_OK) {
 			ofxObservableEvent e("property_changed", &nPropertyID);
 			model->notifyObservers(&e);
-		}
-		else {
-			// @todo maybe remove this completely, commented this because all
-			// custom functions give an error.
-			/*
-			std::string prop = ofxCanonPropertyToString(nPropertyID);
-			std::string message = ofxCanonErrorToString(err);
-			cout << "ERROR_PROP:" << prop <<  " message: " << message << std::endl;
-			*/
 		}
 		return err;
 	}
