@@ -21,9 +21,6 @@ public:
 			,kEdsCameraCommand_TakePicture
 			,0
 		);
-		std::cout << "ofxCanon: (command) take picture! - SLEEP" << std::endl;
-		ofSleepMillis(3000);
-		std::cout << "ofxCanon: (command) take picture! - READY" << std::endl;
 		//CoUninitialize();
 		std::cout << "ofxCanon: (command) take picture!" << std::endl;
 		// Show error:
