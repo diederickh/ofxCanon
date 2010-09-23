@@ -117,7 +117,9 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
+			#ifdef SHOW_OFXCANON_ERRORS
+				cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
+			#endif
 			if(err == EDS_ERR_INTERNAL_ERROR) {
 				ofxObservableEvent e("internal_error");
 				model->notifyObservers(&e);

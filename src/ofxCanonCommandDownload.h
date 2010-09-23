@@ -42,6 +42,9 @@ public:
 
 		// Make the filestream at the forwarding destination (default to PC)
 		if(err == EDS_ERR_OK) {
+			ofxObservableEvent e("start_download");
+			model->notifyObservers(&e);
+		
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();

@@ -13,9 +13,25 @@ class ofxCanon;
 
 // I copied memoryImage to JPEGImage from Theo's code!
 class JPEGImage : public ofImage{
+private:
+	bool flip_vertical;
+	bool flip_horizontal;
 
-    public:
-
+public:
+	JPEGImage(bool bFlipH = false, bool bFlipV = false)
+		:flip_horizontal(bFlipH)
+		,flip_vertical(bFlipV)
+	{
+	}
+	
+	void setFlipVertical(bool bFlip) {
+		flip_vertical = bFlip;
+	}
+	
+	void setFlipHorizontal(bool bFlip) {
+		flip_horizontal = bFlip;
+	}
+	
     bool loadFromMemory(int bytesToRead, unsigned char * jpegBytes, int rotateMode = 0){
         FIMEMORY *hmem = NULL;
 
@@ -47,8 +63,10 @@ class JPEGImage : public ofImage{
         }
 
 		// @todo make this a parameter
-        FreeImage_FlipVertical(tmpBmp);
-		//FreeImage_FlipHorizontal(tmpBmp);
+		if(flip_vertical)
+			FreeImage_FlipVertical(tmpBmp);
+		if(flip_horizontal)
+			FreeImage_FlipHorizontal(tmpBmp);
         putBmpIntoPixels(tmpBmp, myPixels);
         width 		= FreeImage_GetWidth(tmpBmp);
         height 		= FreeImage_GetHeight(tmpBmp);
@@ -95,12 +113,16 @@ public:
 	int resized_frame;
 	JPEGImage jpeg;
 	unsigned char* pixels;
+	bool is_drawing_paused;
+	
 	ofxCanonPictureBox(ofxCanon* pCanon)
 		:canon(pCanon)
 		,active(false)
 		,pixels(NULL)
 		,frame(0)
 		,resized_frame(0)
+		,is_drawing_paused(false)
+		,jpeg(true,false)
 	{
 
 	}
@@ -108,26 +130,28 @@ public:
 	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 		std::string event = pEvent->getEvent();
 		if(event == "evf_data_changed") {
-			EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
-			EdsUInt32 length;
-            EdsGetLength(data->stream, &length);
-
-			if(length > 0) {
-				// @todo we don't really need data_size as we've got length
-						unsigned char* image_data;
-				EdsUInt32 data_size = length;
-				EdsGetPointer(data->stream, (EdsVoid**)&image_data);
-				EdsGetLength(data->stream, &data_size);
-
-				if(jpeg.loadFromMemory((int)data_size, image_data,1)) {
-					frame++;
-					int w = jpeg.width;
-					int h = jpeg.height;
-					if(w > 0 && h > 0) {
-					}
+			if(!is_drawing_paused) {
+				EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
+				EdsUInt32 length;
+				EdsGetLength(data->stream, &length);
+				
+				if(length > 0) {
+					// @todo we don't really need data_size as we've got length
+					unsigned char* image_data;
+					EdsUInt32 data_size = length;
+					EdsGetPointer(data->stream, (EdsVoid**)&image_data);
+					EdsGetLength(data->stream, &data_size);
+					
+					if(jpeg.loadFromMemory((int)data_size, image_data,1)) {
+						frame++;
+						int w = jpeg.width;
+						int h = jpeg.height;
+						if(w > 0 && h > 0) {
 						}
-				else {
-					std::cout << "#### error while converting to image" << std::endl;
+						}
+					else {
+						std::cout << "#### error while converting to image" << std::endl;
+					}
 				}
 			}
 			//std::cout << "download_evf" << std::endl;
@@ -167,6 +191,17 @@ public:
 	}
 	void restart() {
 		fireEvent("download_evf");
+	}
+	
+	void pauseDrawing() {
+		is_drawing_paused = true;
+	}
+	bool isDrawingPaused() {
+		return is_drawing_paused;
+	}
+		
+	bool continueDrawing() {
+		is_drawing_paused = false;
 	}
 };
 

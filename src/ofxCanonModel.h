@@ -48,6 +48,10 @@ public:
 	void setDownloadDir(string sDir)					{ download_dir			= sDir;				}
 	void setCamera(EdsCameraRef oCamera)				{ camera				= oCamera;			}
 	void setSessionOpen(bool bIsSessionOpen)			{ session_open			= bIsSessionOpen;	}
+	void setEvfFlip(bool bFlipH, bool bFlipV)			{ 
+		flip_evf_vertical = bFlipV;
+		flip_evf_horizontal = bFlipH;
+	}
 
 	// Taking a picture parameter
 	EdsUInt32 getAEMode() const							{ return ae_mode;				}
@@ -69,7 +73,8 @@ public:
 	bool	getKeepAlive()	const						{ return keep_alive;			}
 	string	getDownloadDir() const						{ return download_dir;			}
 	bool	isSessionOpen() const						{ return session_open;			}
-
+	bool	flipEvfHorizontal()	const					{ return flip_evf_horizontal;	}
+	bool	flipEvfVertical() const						{ return flip_evf_vertical;		}
 
 
 	void setPropertyUint32(EdsUInt32 nPropertyID, EdsUInt32 nValue) {
@@ -124,6 +129,8 @@ private:
 	EdsFocusInfo	focus_info;
 	EdsChar*		model_name;
 	bool			session_open;
+	bool			flip_evf_horizontal;
+	bool			flip_evf_vertical;
 
 };
 #endif

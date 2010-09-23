@@ -262,3 +262,7 @@ bool ofxCanon::performAction(std::string sCommand) {
 bool ofxCanon::isInitialized() {
 	return initialized;
 }
+
+ofxCanonPictureBox* ofxCanon::getPictureBox() {
+	return picture_box;
+}

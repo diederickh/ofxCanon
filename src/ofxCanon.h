@@ -38,7 +38,8 @@ public:
 	void resetInit();
 	void closeSession();
 	bool openSession();
-
+	ofxCanonPictureBox* getPictureBox();
+	
 protected:
 	bool initialized;
 	bool is_sdk_loaded;
