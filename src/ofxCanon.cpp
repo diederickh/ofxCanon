@@ -95,16 +95,16 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 		EdsRelease(camera_list);
 
 	if(err != EDS_ERR_OK) {
-		cout << "ERROR: Cannot detect camera!" << std::endl;
+		cout << "ofxCanon: ERROR: Cannot detect camera!" << std::endl;
 		resetInit();
 		return false;
 	}
 
 	if (err == EDS_ERR_OK) {
-		cout << "CANON: Camera protocol version: " << device_info.deviceSubType << std::endl;
-		cout << "CANON: Camera protocol description " << device_info.szDeviceDescription << std::endl;
-		cout << "CANON: Camera protocol portname " << device_info.szPortName << std::endl;
-		cout << "CANON: Initialized correctly using camera ID: " << nCameraID << std::endl;
+		cout << "ofxCanon: Camera protocol version: " << device_info.deviceSubType << std::endl;
+		cout << "ofxCanon: Camera protocol description " << device_info.szDeviceDescription << std::endl;
+		cout << "ofxCanon: Camera protocol portname " << device_info.szPortName << std::endl;
+		cout << "ofxCanon: Initialized correctly using camera ID: " << nCameraID << std::endl;
 
 
 		if(model != NULL)
@@ -130,7 +130,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			);
 		}
 		else{
-			std::cout << "ERROR: Cannot add property event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add property event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		// Set state event handler.
@@ -143,11 +143,11 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			);
 		}
 		else {
-			std::cout << "ERROR: Cannot add object event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add object event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		if(err != EDS_ERR_OK) {
-			std::cout << "ERROR: Cannot add state event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add state event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		initialized = true;
@@ -252,7 +252,7 @@ bool ofxCanon::performAction(std::string sCommand) {
 		return false;
 	ofxActionSource* source = action_sources[sCommand];
 	if(!source) {
-		std::cout << "ERROR: Could not find action: " << sCommand << std::endl;
+		std::cout << "ofxCanon: ERROR: Could not find action: " << sCommand << std::endl;
 		return false;
 	}
 	source->fireEvent();

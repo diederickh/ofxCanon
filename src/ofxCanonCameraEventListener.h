@@ -15,7 +15,7 @@ public:
 	)
 	{
 
-		cout	<< "CAMERA_EVENT: handleObjectEvent: "
+		cout	<< "ofxCanon: CAMERA_EVENT: handleObjectEvent: "
 				<< ofxCanonEventToString(inEvent)
 				<< std::endl;
 
@@ -43,7 +43,7 @@ public:
 	)
 	{
 
-		cout	<< "CAMERA_EVENT: handlePropertyEvent: "
+		cout	<< "ofxCanon: CAMERA_EVENT: handlePropertyEvent: "
 				<< inPropertyID << " "
 				<< ofxCanonEventToString(inEvent, 0, inPropertyID)
 				<< std::endl;
@@ -72,7 +72,7 @@ public:
 	{
 
 
-		cout	<< "CAMERA_EVENT: handleStateEvent: "
+		cout	<< "ofxCanon: CAMERA_EVENT: handleStateEvent: "
 				<< ofxCanonEventToString(inEvent, inParam)
 				<< std::endl;
 
