@@ -202,6 +202,7 @@ public:
 		
 	bool continueDrawing() {
 		is_drawing_paused = false;
+		return true;
 	}
 };
 
