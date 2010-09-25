@@ -24,6 +24,10 @@ public:
 		memset(&focus_info, 0, sizeof(focus_info));
 	}
 
+    ~ofxCanonModel() {
+        deleteObservers();
+    }
+
 	EdsCameraRef getCamera() const			{ return  camera; }
 	EdsUInt32 getEvfMode()					{ return evf_mode; }
 
@@ -48,7 +52,7 @@ public:
 	void setDownloadDir(string sDir)					{ download_dir			= sDir;				}
 	void setCamera(EdsCameraRef oCamera)				{ camera				= oCamera;			}
 	void setSessionOpen(bool bIsSessionOpen)			{ session_open			= bIsSessionOpen;	}
-	void setEvfFlip(bool bFlipH, bool bFlipV)			{ 
+	void setEvfFlip(bool bFlipH, bool bFlipV)			{
 		flip_evf_vertical = bFlipV;
 		flip_evf_horizontal = bFlipH;
 	}
