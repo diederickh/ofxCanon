@@ -11,9 +11,9 @@ public:
 	):ofxCanonCommand(sName, pModel)
 	{
 	}
-	
+
 	virtual bool execute() {
-		cout << "ofxCanon: (command) Keep alive!";
+		//cout << "ofxCanon: (command) Keep alive!";
 		EdsError err = EDS_ERR_OK;
 		if(err == EDS_ERR_OK) {
 			err = EdsSendStatusCommand(
@@ -22,13 +22,13 @@ public:
 				,0
 			);
 		}
-				
+
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: " << err << std::endl;
+			//cout << "ERROR: " << err << std::endl;
 		}
 		else {
-			cout << "CANON: Successfully updated the keep-alive time" << std::endl;
+			//cout << "CANON: Successfully updated the keep-alive time" << std::endl;
 		}
 		return true;
 	}

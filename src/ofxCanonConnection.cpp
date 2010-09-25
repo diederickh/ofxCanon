@@ -16,7 +16,7 @@ ofxCanonConnection::ofxCanonConnection(
 }
 
 ofxCanonConnection::~ofxCanonConnection() {
-	std::cout << ">>>> ~ofxCanonConnection" << std::endl;
+	//std::cout << ">>>> ~ofxCanonConnection" << std::endl;
 }
 
 void ofxCanonConnection::update() {

@@ -14,19 +14,23 @@ public:
 		,EdsVoid*		inContext
 	)
 	{
-
+/*
 		cout	<< "ofxCanon: CAMERA_EVENT: handleObjectEvent: "
 				<< ofxCanonEventToString(inEvent)
 				<< std::endl;
+*/
+		//ofxCanonController* controller = (ofxCanonController *)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+		if(controller == NULL)
+            return EDS_ERR_OK;
 
-		ofxCanonController* controller = (ofxCanonController *)inContext;
 		switch(inEvent) {
 			case kEdsObjectEvent_DirItemRequestTransfer:
-				std::cout << "ofxCanon: (eventlistener): fire download event" << std::endl;
+				//std::cout << "ofxCanon: (eventlistener): fire download event" << std::endl;
 				fireEvent(controller, "download", inRef);
 				break;
 			default: {
-				cout << "got event!" << std::endl;
+				//cout << "got event!" << std::endl;
 				if(inRef != NULL)
 					EdsRelease(inRef);
 				break;
@@ -42,13 +46,16 @@ public:
 		,EdsVoid* 		inContext
 	)
 	{
-
+        /*
 		cout	<< "ofxCanon: CAMERA_EVENT: handlePropertyEvent: "
 				<< inPropertyID << " "
 				<< ofxCanonEventToString(inEvent, 0, inPropertyID)
 				<< std::endl;
-
-		ofxCanonController* controller = (ofxCanonController*)inContext;
+        */
+		//ofxCanonController* controller = (ofxCanonController*)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+        if(controller == NULL)
+            return EDS_ERR_OK;
 
 		switch(inEvent) {
 			case kEdsPropertyEvent_PropertyChanged:
@@ -71,12 +78,16 @@ public:
 	)
 	{
 
-
+/*
 		cout	<< "ofxCanon: CAMERA_EVENT: handleStateEvent: "
 				<< ofxCanonEventToString(inEvent, inParam)
 				<< std::endl;
+*/
+		//ofxCanonController* controller = (ofxCanonController*)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+		if(controller == NULL)
+            return EDS_ERR_OK;
 
-		ofxCanonController* controller = (ofxCanonController*)inContext;
 		switch(inEvent) {
 			case kEdsStateEvent_WillSoonShutDown: {
 				fireEvent(controller, "keep_alive");

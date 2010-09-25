@@ -33,7 +33,7 @@ public:
 		EdsStreamRef stream = NULL;
 		EdsDirectoryItemInfo dir_item_info;
 		err = EdsGetDirectoryItemInfo(dir_item, &dir_item_info);
-		std::cout << "ofxCanon: (command), download picture." << std::endl;
+		//std::cout << "ofxCanon: (command), download picture." << std::endl;
 		if(err == EDS_ERR_OK) {
 			// @todo notify download start event
 		}
@@ -44,11 +44,11 @@ public:
 		if(err == EDS_ERR_OK) {
 			ofxObservableEvent e("start_download");
 			model->notifyObservers(&e);
-		
+
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();
-			cout << "ofxCanon:(command) download image to: " << dir << std::endl;
+			//cout << "ofxCanon:(command) download image to: " << dir << std::endl;
 			dir = dir + dir_item_info.szFileName;
 			const char* dest = dir.c_str();
 
@@ -92,9 +92,9 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
-			if(err == EDS_ERR_DEVICE_BUSY)
-				cout << "ERR_MSG: Device is busy\n";
+			//cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
+			//if(err == EDS_ERR_DEVICE_BUSY)
+			//	cout << "ERR_MSG: Device is busy\n";
 		}
 		else {
 			ofxObservableEvent e("download_complete", &filename);

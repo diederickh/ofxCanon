@@ -18,14 +18,14 @@ public:
 			,0
 		);
 
-		std::cout << "ofxCanon: (command) take picture!" << std::endl;
+		//std::cout << "ofxCanon: (command) take picture!" << std::endl;
 		ofxObservableEvent e("take_picture");
 		model->notifyObservers(&e);
 
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
-			if(err == EDS_ERR_DEVICE_BUSY)
-				cout << "ERR_MSG: Device is busy\n";
+			//cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
+			//if(err == EDS_ERR_DEVICE_BUSY)
+			//	cout << "ERR_MSG: Device is busy\n";
 			 // when we return false we keep on trying until it works;
 			 // sometimes this is not helpfull (i.e. when shutting down the
 			 // camera)

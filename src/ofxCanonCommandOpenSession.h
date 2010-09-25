@@ -14,8 +14,7 @@ public:
 	}
 
 	virtual bool execute() {
-
-		cout << "ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
+		//cout << "ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
 		EdsError err = EDS_ERR_OK;
 		err = EdsOpenSession(model->getCamera());
 		bool locked = false;
@@ -61,7 +60,7 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
+			//cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
 			ofxObservableEvent e("internal_error");
 			model->notifyObservers(&e);
 			return true;

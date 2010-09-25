@@ -28,7 +28,7 @@ public:
 		EdsEvfImageRef evf_image = NULL;
 		EdsStreamRef stream = NULL;
 		EdsUInt32 buffer_size = 2 * 1024 * 1024;
-	
+
 		// Exit unless during live view
 		if ((model->getEvfOutputDevice() & kEdsEvfOutputDevice_PC) == 0) {
 			return true;
@@ -45,7 +45,7 @@ public:
 		if(err == EDS_ERR_OK) {
 			EVF_DATASET data_set = {0};
 			data_set.stream = stream;
-		
+
 			// @todo do we need to get all these specs?
 			// Get magnification ratio (x1, x5 or x10)
 			/*
@@ -117,9 +117,9 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			#ifdef SHOW_OFXCANON_ERRORS
-				cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
-			#endif
+			//#ifdef SHOW_OFXCANON_ERRORS
+			//	cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
+			//#endif
 			if(err == EDS_ERR_INTERNAL_ERROR) {
 				ofxObservableEvent e("internal_error");
 				model->notifyObservers(&e);
