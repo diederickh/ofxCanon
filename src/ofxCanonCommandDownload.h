@@ -5,6 +5,7 @@
 #include "ofxCanonDebug.h"
 #include "EDSDK.h"
 #include "ofMain.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandDownload : public ofxCanonCommand {
 private:
@@ -22,6 +23,7 @@ public:
 	}
 
 	virtual ~ofxCanonCommandDownload() {
+	    OFXLOG("~~~~~ ofxCanonCommandDownload()");
 		if(dir_item != NULL) {
 			EdsRelease(dir_item);
 			dir_item = NULL;
@@ -33,7 +35,7 @@ public:
 		EdsStreamRef stream = NULL;
 		EdsDirectoryItemInfo dir_item_info;
 		err = EdsGetDirectoryItemInfo(dir_item, &dir_item_info);
-		//std::cout << "ofxCanon: (command), download picture." << std::endl;
+		OFXLOG("ofxCanon: (command), download picture.");
 		if(err == EDS_ERR_OK) {
 			// @todo notify download start event
 		}
@@ -48,7 +50,7 @@ public:
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();
-			//cout << "ofxCanon:(command) download image to: " << dir << std::endl;
+			OFXLOG("ofxCanon:(command) download image to: " << dir);
 			dir = dir + dir_item_info.szFileName;
 			const char* dest = dir.c_str();
 
@@ -92,7 +94,7 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			//cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
+			OFXLOG("ERROR: " << ofxCanonErrorToString(err));
 			//if(err == EDS_ERR_DEVICE_BUSY)
 			//	cout << "ERR_MSG: Device is busy\n";
 		}

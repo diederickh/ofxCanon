@@ -4,6 +4,7 @@
 #include "ofxCanonCommand.h"
 #include "ofxObservableEvent.h"
 #include "ofxCanonDebug.h"
+#include "ofxLog.h"
 
 typedef struct _EVF_DATASET
 {
@@ -117,8 +118,7 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			//#ifdef SHOW_OFXCANON_ERRORS
-			//	cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
+            OFXLOG("ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err));
 			//#endif
 			if(err == EDS_ERR_INTERNAL_ERROR) {
 				ofxObservableEvent e("internal_error");

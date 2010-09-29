@@ -2,6 +2,7 @@
 #define OFXCANONCOMMANDKEEPALIVEH
 
 #include "ofxCanonCommand.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandKeepAlive : public ofxCanonCommand {
 public:
@@ -13,7 +14,7 @@ public:
 	}
 
 	virtual bool execute() {
-		//cout << "ofxCanon: (command) Keep alive!";
+		OFXLOG("ofxCanon: (command) Keep alive!");
 		EdsError err = EDS_ERR_OK;
 		if(err == EDS_ERR_OK) {
 			err = EdsSendStatusCommand(

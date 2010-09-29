@@ -5,6 +5,7 @@
 #include "ofxCanonDebug.h"
 #include <boost/thread.hpp>
 #include "ofMain.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandOpenSession : public ofxCanonCommand {
 public:
@@ -14,7 +15,7 @@ public:
 	}
 
 	virtual bool execute() {
-		//cout << "ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
+		OFXLOG("ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id());
 		EdsError err = EDS_ERR_OK;
 		err = EdsOpenSession(model->getCamera());
 		bool locked = false;

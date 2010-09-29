@@ -5,6 +5,7 @@
 #include "ofMain.h"
 #include "ofxObservableEvent.h"
 #include "ofxCanonDebug.h"
+#include "ofxLog.h"
 
 // @todo sometimes the "get focus info" property gets into a loop!
 

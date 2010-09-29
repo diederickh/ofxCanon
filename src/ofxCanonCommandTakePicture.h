@@ -3,6 +3,7 @@
 
 #include "ofxCanonCommand.h"
 #include "ofxCanonDebug.h"
+#include "ofxLog.h"
 class ofxCanonCommandTakePicture : public ofxCanonCommand {
 public:
 	ofxCanonCommandTakePicture(std::string sName,ofxCanonModel* pModel)
@@ -11,19 +12,19 @@ public:
 	}
 
 	virtual bool execute() {
+
 		EdsError err = EDS_ERR_OK;
 		err = EdsSendCommand(
 			model->getCamera()
 			,kEdsCameraCommand_TakePicture
 			,0
 		);
-
-		//std::cout << "ofxCanon: (command) take picture!" << std::endl;
+        OFXLOG("ofxCanon: (command) take picture!");
 		ofxObservableEvent e("take_picture");
 		model->notifyObservers(&e);
 
 		if(err != EDS_ERR_OK) {
-			//cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
+			OFXLOG("ERROR: " << ofxCanonErrorToString(err));
 			//if(err == EDS_ERR_DEVICE_BUSY)
 			//	cout << "ERR_MSG: Device is busy\n";
 			 // when we return false we keep on trying until it works;

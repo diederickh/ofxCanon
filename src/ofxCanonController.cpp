@@ -1,5 +1,6 @@
 #include "ofxCanonController.h"
 #include "ofxCanon.h"
+#include "ofxLog.h"
 
 ofxCanonController::ofxCanonController()
 	:canon(NULL)
@@ -54,7 +55,7 @@ void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
 			addCommand(new ofxCanonCommandKeepAlive("keep_alive", model));
 	}
 	if(command == "download") {
-		std::cout << "ofxCanon: (controller) got download action" << std::endl;
+		OFXLOG("ofxCanon: (controller) got download action");
 		addCommand(new ofxCanonCommandDownload(
 								"download"
 								,model
@@ -88,6 +89,7 @@ void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
 
 // add a new command to the processor which a executes it in a thread.
 void ofxCanonController::addCommand(ofxCommand* pCommand) {
+    OFXLOG("ofxCanonController: addCommand: " << pCommand->name);
 	if(pCommand != NULL)
 		processor.enqueue(pCommand);
 }

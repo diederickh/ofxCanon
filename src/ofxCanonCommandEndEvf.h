@@ -3,6 +3,7 @@
 
 #include "ofxCanonCommand.h"
 #include "ofMain.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandEndEvf : public ofxCanonCommand {
 public:
