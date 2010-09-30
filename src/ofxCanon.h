@@ -33,7 +33,8 @@ public:
 	void shutdown();
 	void draw(float nX, float nY, float nWidth, float nHeight);
 	//virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent);
-	virtual void update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent);
+	//virtual void update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent);
+	virtual void update(ofxObservable& pFrom, const ofxObservableEvent& pEvent);
 	void takePicture();
 	void startEvf();
 	void endEvf();

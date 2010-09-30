@@ -20,7 +20,8 @@ public:
 			,0
 		);
         OFXLOG("ofxCanon: (command) take picture!");
-        boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("take_picture"));
+        //boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("take_picture"));
+        ofxObservableEvent e("take_picture");
 		model->notifyObservers(e);
 
 		//ofxObservableEvent e("take_picture");

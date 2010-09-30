@@ -128,12 +128,12 @@ public:
 
 	}
 
-    virtual void update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent) {
+    virtual void update(ofxObservable& pFrom, const ofxObservableEvent& pEvent) {
 	//virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
-		std::string event = pEvent->getEvent();
+		std::string event = pEvent.getEvent();
 		if(event == "evf_data_changed") {
 			if(!is_drawing_paused) {
-				EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
+				EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent.getArg());
 				EdsUInt32 length;
 				EdsGetLength(data->stream, &length);
 
@@ -164,15 +164,18 @@ public:
 		}
 		else if(event == "property_changed") {
 
-			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent->getArg());
-			//ofxCanonModel* model = (ofxCanonModel *)pFrom;
-			boost::shared_ptr<ofxCanonModel> model =  boost::dynamic_pointer_cast<ofxCanonModel>(pFrom);
-			if(!model) {
-                OFXLOG("ofxCanonPictureBox:update() - DEBUG THIS! CANONMODEL CANNOT BE RETRIEVED");
-			    //terminate();
-			}
+			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent.getArg());
 
-			EdsUInt32 device = model->getEvfOutputDevice();
+            //ofxCanonModel* model = (ofxCanonModel *)pFrom;
+            ofxCanonModel& model = static_cast<ofxCanonModel&>(pFrom);
+            // C & c=dynamic_cast <C&> (ref);
+			//boost::shared_ptr<ofxCanonModel> model =  boost::dynamic_pointer_cast<ofxCanonModel>(pFrom);
+			//if(!model) { // TODO check this..... (catting to boost)
+             //   OFXLOG("ofxCanonPictureBox:update() - DEBUG THIS! CANONMODEL CANNOT BE RETRIEVED");
+			    //terminate();
+			//}
+
+			EdsUInt32 device = model.getEvfOutputDevice();
 			if(property_id == kEdsPropID_Evf_OutputDevice) {
 				if(!active && (device & kEdsEvfOutputDevice_PC) != 0) {
 					active = true;

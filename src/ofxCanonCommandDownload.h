@@ -46,7 +46,8 @@ public:
 		if(err == EDS_ERR_OK) {
 			//ofxObservableEvent e("start_download");
 			//model->notifyObservers(&e);
-            boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("start_download"));
+            //boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("start_download"));
+            ofxObservableEvent e("start_download");
             model->notifyObservers(e);
 
 			// @todo check if the download directory exist.
@@ -106,7 +107,8 @@ public:
 			// ======================================================================
 			// @TODO check memory usage here!!!
 			// ======================================================================
-			boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("download_complete", &filename));
+			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("download_complete", &filename));
+			ofxObservableEvent e("download_complete", &filename);
 			model->notifyObservers(e);
 		}
 

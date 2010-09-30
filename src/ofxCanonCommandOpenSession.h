@@ -63,7 +63,8 @@ public:
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			//cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
-			boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
+			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
+			ofxObservableEvent e("internal_error");
 			model->notifyObservers(e);
 			return true;
 			//model->setSessionOpen(false);
@@ -71,7 +72,8 @@ public:
 		else {
 			model->setSessionOpen(true);
 		}
-        boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("opened_session"));
+        //boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("opened_session"));
+        ofxObservableEvent e("opened_session");
 		model->notifyObservers(e);
 		//ofxObservableEvent e("opened_session");
 		//model->notifyObservers(&e);

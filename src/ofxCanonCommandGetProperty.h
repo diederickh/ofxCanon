@@ -137,7 +137,8 @@ private:
 		if(err == EDS_ERR_OK) {
 			//ofxObservableEvent e("property_changed", &nPropertyID);
 			//model->notifyObservers(&e);
-			boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("property_changed", &nPropertyID));
+			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("property_changed", &nPropertyID));
+            ofxObservableEvent e("property_changed", &nPropertyID);
 			model->notifyObservers(e);
 		}
 		return err;
