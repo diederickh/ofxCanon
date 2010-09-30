@@ -20,8 +20,11 @@ public:
 			,0
 		);
         OFXLOG("ofxCanon: (command) take picture!");
-		ofxObservableEvent e("take_picture");
-		model->notifyObservers(&e);
+        boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("take_picture"));
+		model->notifyObservers(e);
+
+		//ofxObservableEvent e("take_picture");
+		//model->notifyObservers(&e);
 
 		if(err != EDS_ERR_OK) {
 			OFXLOG("ERROR: " << ofxCanonErrorToString(err));

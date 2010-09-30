@@ -28,7 +28,7 @@ void ofxCanonController::shutdown() {
 void ofxCanonController::run() {
 	is_running = true;
 	processor.start();
-	addCommand(new ofxCanonCommandOpenSession("open_session", model));
+	addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandOpenSession("open_session", model)));
 }
 
 void ofxCanonController::update() {
@@ -42,42 +42,42 @@ bool ofxCanonController::isRunning() {
 void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
 	std::string command = rEvent.getActionCommand();
 	if(command == "take_picture") {
-		addCommand(new ofxCanonCommandTakePicture("take_picture", model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandTakePicture("take_picture", model)));
 	}
 	if(command == "open_session") {
-		addCommand(new ofxCanonCommandOpenSession("open_session", model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandOpenSession("open_session", model)));
 	}
 	if(command == "close_session") {
-		addCommand(new ofxCanonCommandCloseSession("close_session", model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandCloseSession("close_session", model)));
 	}
 	if(command == "keep_alive") {
 		if(model->getKeepAlive())
-			addCommand(new ofxCanonCommandKeepAlive("keep_alive", model));
+			addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandKeepAlive("keep_alive", model)));
 	}
 	if(command == "download") {
 		OFXLOG("ofxCanon: (controller) got download action");
-		addCommand(new ofxCanonCommandDownload(
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandDownload(
 								"download"
 								,model
-								,static_cast<EdsBaseRef>(rEvent.getArg()))
+								,static_cast<EdsBaseRef>(rEvent.getArg())))
 		);
 	}
 	if(command == "download_evf") {
-		addCommand(new ofxCanonCommandDownloadEvf("download_evf",model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandDownloadEvf("download_evf",model)));
 	}
 	if(command == "start_evf") {
-		addCommand(new ofxCanonCommandStartEvf("start_evf", model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandStartEvf("start_evf", model)));
 	}
 	if(command == "end_evf") {
-		addCommand(new ofxCanonCommandEndEvf("end_evf",model));
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandEndEvf("end_evf",model)));
 	}
 	if(command == "get_property") {
 
-		addCommand(new ofxCanonCommandGetProperty(
+		addCommand(boost::shared_ptr<ofxCommand>(new ofxCanonCommandGetProperty(
 				"get_property"
 				,model
 				,*static_cast<EdsUInt32*>(rEvent.getArg())
-			)
+			))
 		);
 
 	}
@@ -88,8 +88,10 @@ void ofxCanonController::actionPerformed(const ofxActionEvent& rEvent) {
 }
 
 // add a new command to the processor which a executes it in a thread.
-void ofxCanonController::addCommand(ofxCommand* pCommand) {
-    OFXLOG("ofxCanonController: addCommand: " << pCommand->name);
-	if(pCommand != NULL)
+void ofxCanonController::addCommand(boost::shared_ptr<ofxCommand> pCommand) {
+//void ofxCanonController::addCommand(ofxCommand* pCommand) {
+    if(pCommand) {
+	    OFXLOG("ofxCanonController: addCommand: " << pCommand->name);
 		processor.enqueue(pCommand);
+	}
 }

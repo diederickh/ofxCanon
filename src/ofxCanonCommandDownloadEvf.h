@@ -5,7 +5,7 @@
 #include "ofxObservableEvent.h"
 #include "ofxCanonDebug.h"
 #include "ofxLog.h"
-
+#include <boost/shared_ptr.hpp>
 typedef struct _EVF_DATASET
 {
 	EdsStreamRef	stream; // JPEG stream.
@@ -99,8 +99,10 @@ public:
 			model->setEvfZoomRect(data_set.zoomRect);
 			*/
 			if(err == EDS_ERR_OK) {
-				ofxObservableEvent e("evf_data_changed", &data_set);
-				model->notifyObservers(&e);
+				//ofxObservableEvent e("evf_data_changed", &data_set);
+				//model->notifyObservers(&e);
+				boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("evf_data_changed", &data_set));
+				model->notifyObservers(e);
 			}
 		}
 
@@ -121,8 +123,10 @@ public:
             OFXLOG("ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err));
 			//#endif
 			if(err == EDS_ERR_INTERNAL_ERROR) {
-				ofxObservableEvent e("internal_error");
-				model->notifyObservers(&e);
+				//ofxObservableEvent e("internal_error");
+				//model->notifyObservers(&e);
+				boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
+				model->notifyObservers(e);
 			}
 			else if(err == EDS_ERR_OBJECT_NOTREADY) {
 				ofSleepMillis(200);

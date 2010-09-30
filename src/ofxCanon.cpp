@@ -214,16 +214,16 @@ void ofxCanon::setupActionSources() {
 }
 
 void ofxCanon::setupObserver() {
-	picture_box = new ofxCanonPictureBox(this);
+	picture_box = boost::shared_ptr<ofxCanonPictureBox>(new ofxCanonPictureBox(this));
 
 	// Controller listens to picturebox actions
 	picture_box->addActionListener(controller);
 	model->addObserver(picture_box);
-	model->addObserver(this);
+	model->addObserver(shared_from_this());
 }
 
-
-void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
+//void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
+void ofxCanon::update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent) {
 	// sometimes the camera gives an internal error, here we "restart" the
 	// connections/sdk which seems to work.
 	if(pEvent->getEvent() == "internal_error") {
@@ -263,6 +263,7 @@ bool ofxCanon::isInitialized() {
 	return initialized;
 }
 
-ofxCanonPictureBox* ofxCanon::getPictureBox() {
+//ofxCanonPictureBox* ofxCanon::getPictureBox() {
+boost::shared_ptr<ofxCanonPictureBox> ofxCanon::getPictureBox() {
 	return picture_box;
 }

@@ -4,6 +4,7 @@
 #include "ofxCanonCommand.h"
 #include "ofxCanonDebug.h"
 #include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
 #include "ofMain.h"
 #include "ofxLog.h"
 
@@ -62,16 +63,18 @@ public:
 		// Show error:
 		if(err != EDS_ERR_OK) {
 			//cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
-			ofxObservableEvent e("internal_error");
-			model->notifyObservers(&e);
+			boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
+			model->notifyObservers(e);
 			return true;
 			//model->setSessionOpen(false);
 		}
 		else {
 			model->setSessionOpen(true);
 		}
-		ofxObservableEvent e("opened_session");
-		model->notifyObservers(&e);
+        boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("opened_session"));
+		model->notifyObservers(e);
+		//ofxObservableEvent e("opened_session");
+		//model->notifyObservers(&e);
 		return true;
 	}
 };

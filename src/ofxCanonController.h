@@ -22,6 +22,7 @@
 #include "ofxCanonCommandGetProperty.h"
 #include "ofxCanonCommandDownloadEvf.h"
 #include "ofxCanonCommandKeepAlive.h"
+#include <boost/shared_ptr.hpp>
 
 
 class ofxCanon;
@@ -34,7 +35,8 @@ public:
 	bool isRunning();
 	void update(); // fixing ofxCommandProcessor
 	void actionPerformed(const ofxActionEvent& rEvent);
-	void addCommand(ofxCommand* pCommand);
+	//void addCommand(ofxCommand* pCommand);
+	void addCommand(boost::shared_ptr<ofxCommand> pCommand);
 
 private:
 	bool is_running;
@@ -43,7 +45,7 @@ private:
 
 	#if defined( __WIN32__ ) || defined( _WIN32 )
 		ofxCommandProcessorThreadWin processor;
-	#elif defined(__APPLE__)	
+	#elif defined(__APPLE__)
 		ofxCommandProcessorThreadMac processor;
 	#endif
 };

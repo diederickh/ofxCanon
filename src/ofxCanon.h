@@ -16,12 +16,14 @@
 #include "ofxObserver.h"
 #include <map>
 #include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
-class ofxCanon : public ofxObserver {
+class ofxCanon : public ofxObserver, public boost::enable_shared_from_this<ofxCanon> {
 public:
 	ofxCanonModel* model;
 	ofxCanonController* controller;
-	ofxCanonPictureBox* picture_box;
+	boost::shared_ptr<ofxCanonPictureBox> picture_box;
 	ofxCanon();
 	~ofxCanon();
 	void update();
@@ -30,7 +32,8 @@ public:
 	bool isInitializing();
 	void shutdown();
 	void draw(float nX, float nY, float nWidth, float nHeight);
-	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent);
+	//virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent);
+	virtual void update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent);
 	void takePicture();
 	void startEvf();
 	void endEvf();
@@ -38,8 +41,9 @@ public:
 	void resetInit();
 	void closeSession();
 	bool openSession();
-	ofxCanonPictureBox* getPictureBox();
-	
+	//ofxCanonPictureBox* getPictureBox();
+	boost::shared_ptr<ofxCanonPictureBox> getPictureBox();
+
 protected:
 	bool initialized;
 	bool is_sdk_loaded;

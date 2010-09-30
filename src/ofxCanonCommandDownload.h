@@ -44,8 +44,10 @@ public:
 
 		// Make the filestream at the forwarding destination (default to PC)
 		if(err == EDS_ERR_OK) {
-			ofxObservableEvent e("start_download");
-			model->notifyObservers(&e);
+			//ofxObservableEvent e("start_download");
+			//model->notifyObservers(&e);
+            boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("start_download"));
+            model->notifyObservers(e);
 
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
@@ -99,8 +101,13 @@ public:
 			//	cout << "ERR_MSG: Device is busy\n";
 		}
 		else {
-			ofxObservableEvent e("download_complete", &filename);
-			model->notifyObservers(&e);
+			//ofxObservableEvent e("download_complete", &filename);
+			//model->notifyObservers(&e);
+			// ======================================================================
+			// @TODO check memory usage here!!!
+			// ======================================================================
+			boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("download_complete", &filename));
+			model->notifyObservers(e);
 		}
 
 		return true;
