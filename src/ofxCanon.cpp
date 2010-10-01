@@ -13,18 +13,26 @@ ofxCanon::ofxCanon()
 }
 
 ofxCanon::~ofxCanon() {
-	std::cout << ">> ~ofxCanon()" << std::endl;
+    OFXLOG("~~~~ ofxCanon");
 	shutdown();
 }
 
 void ofxCanon::shutdown() {
-	if(evf_started)
+    OFXLOG("ofxCanon::shutdown");
+	if(evf_started) {
+	    OFXLOG("ofxCanon::shutdown - end evf");
 		endEvf();
-	if(model->isSessionOpen())
+	}
+	if(model->isSessionOpen()) {
+	    OFXLOG("ofxCanon::shutdown - close session");
 		closeSession();
-	if(controller != NULL)
+	}
+	if(controller != NULL) {
+	    OFXLOG("ofxCanon::shutdown - shutdown controller");
 		controller->shutdown();
+	}
 	if(is_sdk_loaded) {
+	    OFXLOG("ofxCanon::shutdown - terminate SDK");
 		EdsTerminateSDK();
 	}
 	// @todo maybe also release the camera reference from init()?

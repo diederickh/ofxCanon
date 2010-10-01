@@ -62,7 +62,7 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			//cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
+			OFXLOG("ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << "");
 			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
 			ofxObservableEvent e("internal_error");
 			model->notifyObservers(e);

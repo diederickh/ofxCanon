@@ -67,12 +67,14 @@ public:
 
 		// Set progress
 		if(err == EDS_ERR_OK) {
+		    /* TODO 2010.10.01 disabled this ..maybe this is giving errors *
 			err = EdsSetProgressCallback(
 				 stream
 				,ProgressFunc
 				,kEdsProgressOption_Periodically
 				,this
 			);
+			*/
 		}
 
 		// Download image

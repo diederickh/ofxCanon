@@ -12,6 +12,7 @@
 #include "ofxCanonCameraEventListener.h"
 #include "ofxCanonPictureBox.h"
 #include "ofxCanonConnection.h"
+#include "ofxLog.h"
 
 #include "ofxObserver.h"
 #include <map>
@@ -19,7 +20,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-class ofxCanon : public ofxObserver, public boost::enable_shared_from_this<ofxCanon> {
+//class ofxCanon : public ofxObserver, public boost::enable_shared_from_this<ofxCanon> {
+class ofxCanon : public ofxObserver {
 public:
 	ofxCanonModel* model;
 	ofxCanonController* controller;
