@@ -46,10 +46,12 @@ public:
 		,EdsVoid* 		inContext
 	)
 	{
+	    /*
         OFXLOG("ofxCanon: CAMERA_EVENT: handlePropertyEvent: "
 				<< inPropertyID << " "
 				<< ofxCanonEventToString(inEvent, 0, inPropertyID)
         );
+        */
 		//ofxCanonController* controller = (ofxCanonController*)inContext;
 		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
         if(controller == NULL)

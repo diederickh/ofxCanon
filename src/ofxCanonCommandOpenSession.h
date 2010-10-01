@@ -66,7 +66,7 @@ public:
 			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
 			ofxObservableEvent e("internal_error");
 			model->notifyObservers(e);
-			return true;
+			return false;
 			//model->setSessionOpen(false);
 		}
 		else {
