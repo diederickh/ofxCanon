@@ -7,8 +7,6 @@
 using namespace std;
 class ofxCanonModel : public ofxObservable {
 public:
-	//ofxCanonModel(EdsCameraRef oCamera)
-		//:camera(oCamera)
 	ofxCanonModel()
 		:tv(0)
 		,av(0)
@@ -21,10 +19,14 @@ public:
 		,evf_dof(0)
 		,evf_zoom(0)
 		,keep_alive(true)
-		,download_dir("../../../data/images/") // end with slash! (defaulds for Mac app dir)
+		,download_dir("../../../data/images/") // end with slash! (defaults for Mac app dir)
 	{
 		memset(&focus_info, 0, sizeof(focus_info));
 	}
+
+    ~ofxCanonModel() {
+        deleteObservers();
+    }
 
 	EdsCameraRef getCamera() const			{ return  camera; }
 	EdsUInt32 getEvfMode()					{ return evf_mode; }
@@ -50,6 +52,10 @@ public:
 	void setDownloadDir(string sDir)					{ download_dir			= sDir;				}
 	void setCamera(EdsCameraRef oCamera)				{ camera				= oCamera;			}
 	void setSessionOpen(bool bIsSessionOpen)			{ session_open			= bIsSessionOpen;	}
+	void setEvfFlip(bool bFlipH, bool bFlipV)			{
+		flip_evf_vertical = bFlipV;
+		flip_evf_horizontal = bFlipH;
+	}
 
 	// Taking a picture parameter
 	EdsUInt32 getAEMode() const							{ return ae_mode;				}
@@ -71,7 +77,8 @@ public:
 	bool	getKeepAlive()	const						{ return keep_alive;			}
 	string	getDownloadDir() const						{ return download_dir;			}
 	bool	isSessionOpen() const						{ return session_open;			}
-
+	bool	flipEvfHorizontal()	const					{ return flip_evf_horizontal;	}
+	bool	flipEvfVertical() const						{ return flip_evf_vertical;		}
 
 
 	void setPropertyUint32(EdsUInt32 nPropertyID, EdsUInt32 nValue) {
@@ -126,6 +133,8 @@ private:
 	EdsFocusInfo	focus_info;
 	EdsChar*		model_name;
 	bool			session_open;
+	bool			flip_evf_horizontal;
+	bool			flip_evf_vertical;
 
 };
 #endif

@@ -4,7 +4,9 @@
 #include "ofxCanonCommand.h"
 #include "ofxCanonDebug.h"
 #include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
 #include "ofMain.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandOpenSession : public ofxCanonCommand {
 public:
@@ -14,8 +16,7 @@ public:
 	}
 
 	virtual bool execute() {
-
-		cout << "ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id() << std::endl;
+		OFXLOG("ofxCanon: (command) execute open session in threadd: " << boost::this_thread::get_id());
 		EdsError err = EDS_ERR_OK;
 		err = EdsOpenSession(model->getCamera());
 		bool locked = false;
@@ -61,18 +62,21 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << " return an internal error t reset init()" << std::endl;
+			OFXLOG("ERROR: ofxCanonCommandOpenSession(): " << ofxCanonErrorToString(err) << "");
+			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
 			ofxObservableEvent e("internal_error");
-			model->notifyObservers(&e);
-			return true;
+			model->notifyObservers(e);
+			return false;
 			//model->setSessionOpen(false);
 		}
 		else {
 			model->setSessionOpen(true);
 		}
-		ofxObservableEvent e("opened_session");
-		model->notifyObservers(&e);
-		cout << "Opened session..." << std::endl;
+        //boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("opened_session"));
+        ofxObservableEvent e("opened_session");
+		model->notifyObservers(e);
+		//ofxObservableEvent e("opened_session");
+		//model->notifyObservers(&e);
 		return true;
 	}
 };

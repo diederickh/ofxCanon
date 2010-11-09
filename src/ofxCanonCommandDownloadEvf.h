@@ -4,7 +4,8 @@
 #include "ofxCanonCommand.h"
 #include "ofxObservableEvent.h"
 #include "ofxCanonDebug.h"
-
+#include "ofxLog.h"
+#include <boost/shared_ptr.hpp>
 typedef struct _EVF_DATASET
 {
 	EdsStreamRef	stream; // JPEG stream.
@@ -28,10 +29,9 @@ public:
 		EdsEvfImageRef evf_image = NULL;
 		EdsStreamRef stream = NULL;
 		EdsUInt32 buffer_size = 2 * 1024 * 1024;
-		//std::cout << "(command) downloadEvf+++++++++++++++++++++++++++++\n";
+
 		// Exit unless during live view
 		if ((model->getEvfOutputDevice() & kEdsEvfOutputDevice_PC) == 0) {
-			//cout << "CANON: Don't download anymore as we're ready." << std::endl;
 			return true;
 		}
 
@@ -46,8 +46,6 @@ public:
 		if(err == EDS_ERR_OK) {
 			EVF_DATASET data_set = {0};
 			data_set.stream = stream;
-			//ofxObservableEvent e("evf_data_changed", &data_set);
-			//model->notifyObservers(&e);
 
 			// @todo do we need to get all these specs?
 			// Get magnification ratio (x1, x5 or x10)
@@ -101,9 +99,11 @@ public:
 			model->setEvfZoomRect(data_set.zoomRect);
 			*/
 			if(err == EDS_ERR_OK) {
-				//cout << "in ofxCanonCommandDownloadEvf: downloaded! " << std::endl;
+				//ofxObservableEvent e("evf_data_changed", &data_set);
+				//model->notifyObservers(&e);
+				//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("evf_data_changed", &data_set));
 				ofxObservableEvent e("evf_data_changed", &data_set);
-				model->notifyObservers(&e);
+				model->notifyObservers(e);
 			}
 		}
 
@@ -121,10 +121,14 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err) << std::endl;
+            OFXLOG("ERROR: in ofxCanonCommandDownloadEvf " << ofxCanonErrorToString(err));
+			//#endif
 			if(err == EDS_ERR_INTERNAL_ERROR) {
+				//ofxObservableEvent e("internal_error");
+				//model->notifyObservers(&e);
+				//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("internal_error"));
 				ofxObservableEvent e("internal_error");
-				model->notifyObservers(&e);
+				model->notifyObservers(e);
 			}
 			else if(err == EDS_ERR_OBJECT_NOTREADY) {
 				ofSleepMillis(200);

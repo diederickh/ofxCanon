@@ -4,7 +4,7 @@
 #include "EDSDK.h"
 #include "ofxCanonController.h"
 #include "ofxCanonDebug.h"
-
+#include "ofxLog.h"
 class ofxCanonCameraEventListener {
 public:
 
@@ -15,18 +15,22 @@ public:
 	)
 	{
 
-		cout	<< "CAMERA_EVENT: handleObjectEvent: "
+		OFXLOG("ofxCanon: CAMERA_EVENT: handleObjectEvent: "
 				<< ofxCanonEventToString(inEvent)
-				<< std::endl;
+        );
 
-		ofxCanonController* controller = (ofxCanonController *)inContext;
+		//ofxCanonController* controller = (ofxCanonController *)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+		if(controller == NULL)
+            return EDS_ERR_OK;
+
 		switch(inEvent) {
 			case kEdsObjectEvent_DirItemRequestTransfer:
-				std::cout << "ofxCanon: (eventlistener): fire download event" << std::endl;
+				OFXLOG("ofxCanon: (eventlistener): fire download event.");
 				fireEvent(controller, "download", inRef);
 				break;
 			default: {
-				cout << "got event!" << std::endl;
+				//cout << "got event!" << std::endl;
 				if(inRef != NULL)
 					EdsRelease(inRef);
 				break;
@@ -42,13 +46,16 @@ public:
 		,EdsVoid* 		inContext
 	)
 	{
-
-		cout	<< "CAMERA_EVENT: handlePropertyEvent: "
+	    /*
+        OFXLOG("ofxCanon: CAMERA_EVENT: handlePropertyEvent: "
 				<< inPropertyID << " "
 				<< ofxCanonEventToString(inEvent, 0, inPropertyID)
-				<< std::endl;
-
-		ofxCanonController* controller = (ofxCanonController*)inContext;
+        );
+        */
+		//ofxCanonController* controller = (ofxCanonController*)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+        if(controller == NULL)
+            return EDS_ERR_OK;
 
 		switch(inEvent) {
 			case kEdsPropertyEvent_PropertyChanged:
@@ -71,12 +78,15 @@ public:
 	)
 	{
 
-
-		cout	<< "CAMERA_EVENT: handleStateEvent: "
+        OFXLOG("ofxCanon: CAMERA_EVENT: handleStateEvent: "
 				<< ofxCanonEventToString(inEvent, inParam)
-				<< std::endl;
+        );
 
-		ofxCanonController* controller = (ofxCanonController*)inContext;
+		//ofxCanonController* controller = (ofxCanonController*)inContext;
+		ofxCanonController* controller = static_cast<ofxCanonController*>(inContext);
+		if(controller == NULL)
+            return EDS_ERR_OK;
+
 		switch(inEvent) {
 			case kEdsStateEvent_WillSoonShutDown: {
 				fireEvent(controller, "keep_alive");

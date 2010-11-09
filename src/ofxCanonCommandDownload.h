@@ -5,6 +5,7 @@
 #include "ofxCanonDebug.h"
 #include "EDSDK.h"
 #include "ofMain.h"
+#include "ofxLog.h"
 
 class ofxCanonCommandDownload : public ofxCanonCommand {
 private:
@@ -22,6 +23,7 @@ public:
 	}
 
 	virtual ~ofxCanonCommandDownload() {
+	    OFXLOG("~~~~~ ofxCanonCommandDownload()");
 		if(dir_item != NULL) {
 			EdsRelease(dir_item);
 			dir_item = NULL;
@@ -33,7 +35,7 @@ public:
 		EdsStreamRef stream = NULL;
 		EdsDirectoryItemInfo dir_item_info;
 		err = EdsGetDirectoryItemInfo(dir_item, &dir_item_info);
-		std::cout << "ofxCanon: (command), download picture." << std::endl;
+		OFXLOG("ofxCanon: (command), download picture.");
 		if(err == EDS_ERR_OK) {
 			// @todo notify download start event
 		}
@@ -42,13 +44,19 @@ public:
 
 		// Make the filestream at the forwarding destination (default to PC)
 		if(err == EDS_ERR_OK) {
+			//ofxObservableEvent e("start_download");
+			//model->notifyObservers(&e);
+            //boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("start_download"));
+            ofxObservableEvent e("start_download");
+            model->notifyObservers(e);
+
 			// @todo check if the download directory exist.
 			//string dir = ofToDataPath( "images/" );
 			string dir = model->getDownloadDir();
-			cout << "DOWNLOAD TO: " << dir << std::endl;
+			OFXLOG("ofxCanon:(command) download image to: " << dir);
 			dir = dir + dir_item_info.szFileName;
 			const char* dest = dir.c_str();
-			cout << "SAVE DEST: "<< dest << std::endl;
+
 			err = EdsCreateFileStream(
 				dest
 				,kEdsFileCreateDisposition_CreateAlways
@@ -59,12 +67,14 @@ public:
 
 		// Set progress
 		if(err == EDS_ERR_OK) {
+		    /* TODO 2010.10.01 disabled this ..maybe this is giving errors *
 			err = EdsSetProgressCallback(
 				 stream
 				,ProgressFunc
 				,kEdsProgressOption_Periodically
 				,this
 			);
+			*/
 		}
 
 		// Download image
@@ -89,13 +99,19 @@ public:
 
 		// Show error:
 		if(err != EDS_ERR_OK) {
-			cout << "ERROR: " << ofxCanonErrorToString(err) << std::endl;
-			if(err == EDS_ERR_DEVICE_BUSY)
-				cout << "ERR_MSG: Device is busy\n";
+			OFXLOG("ERROR: " << ofxCanonErrorToString(err));
+			//if(err == EDS_ERR_DEVICE_BUSY)
+			//	cout << "ERR_MSG: Device is busy\n";
 		}
 		else {
+			//ofxObservableEvent e("download_complete", &filename);
+			//model->notifyObservers(&e);
+			// ======================================================================
+			// @TODO check memory usage here!!!
+			// ======================================================================
+			//boost::shared_ptr<ofxObservableEvent> e(new ofxObservableEvent("download_complete", &filename));
 			ofxObservableEvent e("download_complete", &filename);
-			model->notifyObservers(&e);
+			model->notifyObservers(e);
 		}
 
 		return true;

@@ -13,18 +13,26 @@ ofxCanon::ofxCanon()
 }
 
 ofxCanon::~ofxCanon() {
-	std::cout << ">> ~ofxCanon()" << std::endl;
+    OFXLOG("~~~~ ofxCanon");
 	shutdown();
 }
 
 void ofxCanon::shutdown() {
-	if(evf_started)
+    OFXLOG("ofxCanon::shutdown");
+	if(evf_started) {
+	    OFXLOG("ofxCanon::shutdown - end evf");
 		endEvf();
-	if(model->isSessionOpen())
+	}
+	if(model->isSessionOpen()) {
+	    OFXLOG("ofxCanon::shutdown - close session");
 		closeSession();
-	if(controller != NULL)
+	}
+	if(controller != NULL) {
+	    OFXLOG("ofxCanon::shutdown - shutdown controller");
 		controller->shutdown();
+	}
 	if(is_sdk_loaded) {
+	    OFXLOG("ofxCanon::shutdown - terminate SDK");
 		EdsTerminateSDK();
 	}
 	// @todo maybe also release the camera reference from init()?
@@ -95,26 +103,20 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 		EdsRelease(camera_list);
 
 	if(err != EDS_ERR_OK) {
-		cout << "ERROR: Cannot detect camera!" << std::endl;
+		cout << "ofxCanon: ERROR: Cannot detect camera!" << std::endl;
 		resetInit();
 		return false;
 	}
 
 	if (err == EDS_ERR_OK) {
-		cout << "CANON: Camera protocol version: " << device_info.deviceSubType << std::endl;
-		cout << "CANON: Camera protocol description " << device_info.szDeviceDescription << std::endl;
-		cout << "CANON: Camera protocol portname " << device_info.szPortName << std::endl;
-		cout << "CANON: Initialized correctly using camera ID: " << nCameraID << std::endl;
+		cout << "ofxCanon: Camera protocol version: " << device_info.deviceSubType << std::endl;
+		cout << "ofxCanon: Camera protocol description " << device_info.szDeviceDescription << std::endl;
+		cout << "ofxCanon: Camera protocol portname " << device_info.szPortName << std::endl;
+		cout << "ofxCanon: Initialized correctly using camera ID: " << nCameraID << std::endl;
 
 
 		if(model != NULL)
 			model->setCamera(camera);
-
-		if(controller == NULL) {
-			//controller = new ofxCanonController(this, model);
-		}
-
-
 
 		// Set property event handler.
 		if (err == EDS_ERR_OK) {
@@ -136,7 +138,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			);
 		}
 		else{
-			std::cout << "ERROR: Cannot add property event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add property event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		// Set state event handler.
@@ -149,11 +151,11 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 			);
 		}
 		else {
-			std::cout << "ERROR: Cannot add object event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add object event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		if(err != EDS_ERR_OK) {
-			std::cout << "ERROR: Cannot add state event listener: " << ofxCanonErrorToString(err) << std::endl;
+			std::cout << "ofxCanon: ERROR: Cannot add state event listener: " << ofxCanonErrorToString(err) << std::endl;
 		}
 
 		initialized = true;
@@ -173,13 +175,7 @@ bool ofxCanon::init(int nCameraID, string sDownloadDir) {
 	std::cout << "ofxCanon: init() ready" << std::endl;
 	return true;
 }
-/*
-void ofxCanon::threadedFunction() {
-	while(1) {
-		update();
-	};
-}
-*/
+
 
 void ofxCanon::update() {
 	if(controller != NULL) {
@@ -195,7 +191,6 @@ bool ofxCanon::openSession() {
 
 void ofxCanon::closeSession() {
 	performAction("close_session");
-	//session_opened = false;
 }
 
 void ofxCanon::takePicture() {
@@ -227,19 +222,21 @@ void ofxCanon::setupActionSources() {
 }
 
 void ofxCanon::setupObserver() {
-	picture_box = new ofxCanonPictureBox(this);
+
+	picture_box = boost::shared_ptr<ofxCanonPictureBox>(new ofxCanonPictureBox(this));
 
 	// Controller listens to picturebox actions
 	picture_box->addActionListener(controller);
 	model->addObserver(picture_box);
-	model->addObserver(this);
+	// model->addObserver(shared_from_this()); // TODO shared_from_this only works when ofxCanon is owned by a shared_ptr
 }
 
-
-void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
+//void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
+//void ofxCanon::update(boost::shared_ptr<ofxObservable> pFrom, boost::shared_ptr<ofxObservableEvent> pEvent) {
+void ofxCanon::update(ofxObservable& pFrom, const ofxObservableEvent& pEvent) {
 	// sometimes the camera gives an internal error, here we "restart" the
 	// connections/sdk which seems to work.
-	if(pEvent->getEvent() == "internal_error") {
+	if(pEvent.getEvent() == "internal_error") {
 		std::cout << "ofxCanon: handling internal_error: reset init." <<std::endl;
 		closeSession();
 		resetInit();
@@ -249,9 +246,7 @@ void ofxCanon::update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
 void ofxCanon::draw(float nX, float nY, float nWidth , float nHeight) {
 	// @todo use callback and set pixels when we got new pixels from
 	// the EVF or when a picture has been taken.
-	//lock();
 	picture_box->draw(nX, nY, nWidth, nHeight);
-	//unlock();
 }
 
 void ofxCanon::addActionSource(std::string sCommand) {
@@ -267,7 +262,7 @@ bool ofxCanon::performAction(std::string sCommand) {
 		return false;
 	ofxActionSource* source = action_sources[sCommand];
 	if(!source) {
-		std::cout << "ERROR: Could not find action: " << sCommand << std::endl;
+		std::cout << "ofxCanon: ERROR: Could not find action: " << sCommand << std::endl;
 		return false;
 	}
 	source->fireEvent();
@@ -276,4 +271,9 @@ bool ofxCanon::performAction(std::string sCommand) {
 
 bool ofxCanon::isInitialized() {
 	return initialized;
+}
+
+//ofxCanonPictureBox* ofxCanon::getPictureBox() {
+boost::shared_ptr<ofxCanonPictureBox> ofxCanon::getPictureBox() {
+	return picture_box;
 }

@@ -8,13 +8,30 @@
 #include "ofxCanonCommandDownloadEvf.h"
 #include "EDSDK.h"
 #include "ofMain.h"
+#include <boost/shared_ptr.hpp>
 class ofxCanon;
 
 
 // I copied memoryImage to JPEGImage from Theo's code!
 class JPEGImage : public ofImage{
+private:
+	bool flip_vertical;
+	bool flip_horizontal;
 
-    public:
+public:
+	JPEGImage(bool bFlipH = false, bool bFlipV = false)
+		:flip_horizontal(bFlipH)
+		,flip_vertical(bFlipV)
+	{
+	}
+
+	void setFlipVertical(bool bFlip) {
+		flip_vertical = bFlip;
+	}
+
+	void setFlipHorizontal(bool bFlip) {
+		flip_horizontal = bFlip;
+	}
 
     bool loadFromMemory(int bytesToRead, unsigned char * jpegBytes, int rotateMode = 0){
         FIMEMORY *hmem = NULL;
@@ -46,8 +63,11 @@ class JPEGImage : public ofImage{
             FreeImage_Unload(oldBmp);
         }
 
-        //FreeImage_FlipVertical(tmpBmp);
-
+		// @todo make this a parameter
+		if(flip_vertical)
+			FreeImage_FlipVertical(tmpBmp);
+		if(flip_horizontal)
+			FreeImage_FlipHorizontal(tmpBmp);
         putBmpIntoPixels(tmpBmp, myPixels);
         width 		= FreeImage_GetWidth(tmpBmp);
         height 		= FreeImage_GetHeight(tmpBmp);
@@ -55,7 +75,6 @@ class JPEGImage : public ofImage{
 
         swapRgb(myPixels);
 
-		//setFromPixels(getPixels(), width,height, OF_IMAGE_COLOR);
         FreeImage_Unload(tmpBmp);
         FreeImage_CloseMemory(hmem);
 
@@ -95,44 +114,46 @@ public:
 	int resized_frame;
 	JPEGImage jpeg;
 	unsigned char* pixels;
+	bool is_drawing_paused;
+
 	ofxCanonPictureBox(ofxCanon* pCanon)
 		:canon(pCanon)
 		,active(false)
 		,pixels(NULL)
 		,frame(0)
 		,resized_frame(0)
+		,is_drawing_paused(false)
+		,jpeg(true,false)
 	{
 
 	}
 
-	virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
-		std::string event = pEvent->getEvent();
-		//std::cout << "ofxCanon: ofxCanonPictureBox: got event: " << event << std::endl;
-
+    virtual void update(ofxObservable& pFrom, const ofxObservableEvent& pEvent) {
+	//virtual void update(ofxObservable* pFrom, ofxObservableEvent *pEvent) {
+		std::string event = pEvent.getEvent();
 		if(event == "evf_data_changed") {
-			//std::cout << "ofxCanon: ofxCanonPictureBox: evf_data_changed." << std::endl;
-			EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent->getArg());
-			EdsUInt32 length;
-            EdsGetLength(data->stream, &length);
+			if(!is_drawing_paused) {
+				EVF_DATASET* data = static_cast<EVF_DATASET *>(pEvent.getArg());
+				EdsUInt32 length;
+				EdsGetLength(data->stream, &length);
 
-			if(length > 0) {
-				// @todo we don't really need data_size as we've got length
-				//cout << "length: " << length << ", data_size: " << data_size << std::endl;
-				unsigned char* image_data;
-				EdsUInt32 data_size = length;
-				EdsGetPointer(data->stream, (EdsVoid**)&image_data);
-				EdsGetLength(data->stream, &data_size);
+				if(length > 0) {
+					// @todo we don't really need data_size as we've got length
+					unsigned char* image_data;
+					EdsUInt32 data_size = length;
+					EdsGetPointer(data->stream, (EdsVoid**)&image_data);
+					EdsGetLength(data->stream, &data_size);
 
-				if(jpeg.loadFromMemory((int)data_size, image_data,1)) {
-					frame++;
-					int w = jpeg.width;
-					int h = jpeg.height;
-					if(w > 0 && h > 0) {
+					if(jpeg.loadFromMemory((int)data_size, image_data,1)) {
+						frame++;
+						int w = jpeg.width;
+						int h = jpeg.height;
+						if(w > 0 && h > 0) {
+						}
+						}
+					else {
+						std::cout << "#### error while converting to image" << std::endl;
 					}
-					//cout << ">> got frame: " << frame << ", width: " << jpeg.width << " height: " << jpeg.height << std::endl;
-				}
-				else {
-					std::cout << "#### error while converting to image" << std::endl;
 				}
 			}
 			//std::cout << "download_evf" << std::endl;
@@ -143,15 +164,20 @@ public:
 		}
 		else if(event == "property_changed") {
 
-			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent->getArg());
+			EdsInt32 property_id = *static_cast<EdsInt32*>(pEvent.getArg());
 
-			ofxCanonModel* model = (ofxCanonModel *)pFrom;
-			EdsUInt32 device = model->getEvfOutputDevice();
+            //ofxCanonModel* model = (ofxCanonModel *)pFrom;
+            ofxCanonModel& model = static_cast<ofxCanonModel&>(pFrom);
+            // C & c=dynamic_cast <C&> (ref);
+			//boost::shared_ptr<ofxCanonModel> model =  boost::dynamic_pointer_cast<ofxCanonModel>(pFrom);
+			//if(!model) { // TODO check this..... (catting to boost)
+             //   OFXLOG("ofxCanonPictureBox:update() - DEBUG THIS! CANONMODEL CANNOT BE RETRIEVED");
+			    //terminate();
+			//}
 
+			EdsUInt32 device = model.getEvfOutputDevice();
 			if(property_id == kEdsPropID_Evf_OutputDevice) {
-				//std::cout << "ofxCanon: ofxCanonPictureBox: got outputdevice changed event." << std::endl;
 				if(!active && (device & kEdsEvfOutputDevice_PC) != 0) {
-					//std::cout << "ofxCanon: ofxCanonPictureBox: fire download_evf event!." << std::endl;
 					active = true;
 					fireEvent("download_evf");
 				}
@@ -175,6 +201,18 @@ public:
 	}
 	void restart() {
 		fireEvent("download_evf");
+	}
+
+	void pauseDrawing() {
+		is_drawing_paused = true;
+	}
+	bool isDrawingPaused() {
+		return is_drawing_paused;
+	}
+
+	bool continueDrawing() {
+		is_drawing_paused = false;
+		return true;
 	}
 };
 
