@@ -35,12 +35,15 @@ namespace roxlu {
 			bool isCameraConnected();
 			void takePicture();
 			string getDownloadDir(); 
+            void setFileName(string newFileName);
+            string getFileName();
 			
 			bool isSessionOpen();
 			bool isLiveViewActive();
 			void startLiveView();
 			void endLiveView();
 			void drawLiveView(int x = 0, int y = 0);
+            void drawLiveViewWithSize(int x, int y, int w, int h);
 			ofPixels& getLivePixels();
 			
 			static Canon& instance();
@@ -132,6 +135,7 @@ namespace roxlu {
 			bool live_view_requested;
 			bool has_new_live_image;
 			bool session_open;
+            string file_name;
 			ofBuffer live_buffer;
 			ofTexture live_texture;
 			ofPixels live_pixels;
