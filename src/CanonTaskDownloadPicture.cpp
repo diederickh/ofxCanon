@@ -21,7 +21,7 @@ bool CanonTaskDownloadPicture::execute() {
             dest = Canon::instance().getDownloadDir() +dir_item_info.szFileName;
         else
             dest = Canon::instance().getDownloadDir() + Canon::instance().getFileName();
-        //  a
+
 		err = EdsCreateFileStream(dest.c_str(), kEdsFileCreateDisposition_CreateAlways, kEdsAccess_ReadWrite, &stream);
 	}
 	if(err != EDS_ERR_OK) {
