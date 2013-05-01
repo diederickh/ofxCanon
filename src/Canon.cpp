@@ -1,4 +1,5 @@
 #include "Canon.h"
+#include "CanonEventListener.h"
 
 namespace roxlu {
 
@@ -22,10 +23,8 @@ Canon::Canon()
 }
 
 Canon::~Canon() {
-	shutdownSDK();
-	queue.stop();
-	queue_thread.join();
-	
+    ofRemoveListener(canon_event_dispatcher, this, &Canon::onCanonEvent);
+    shutdownSDK();
 }
 
 Canon& Canon::instance() {
@@ -41,7 +40,7 @@ void Canon::downloadTakenPicture(EdsBaseRef inRef) {
 }
 
 bool Canon::start() {
-	queue_thread.start(queue);
+    queue_thread.start(queue);
 	connection_thread.start(connection);
 	initSDK();
 }
@@ -51,13 +50,29 @@ void Canon::initSDK() {
 		printf("Canon: error, cannot initialize SDK as camera is not yet released\n");
 		return;
 	}
-	queue.addTask(new CanonTaskInit());
-	queue.addTask(new CanonTaskOpenSession());
+    
+    //we need to init on the main thread - otherwise live events don't work
+    CanonTaskInit *init = new CanonTaskInit();
+    init->setCanon(this);
+    init->execute();
+    delete init;
+    
+    CanonTaskOpenSession *openSession = new CanonTaskOpenSession();
+    openSession->setCanon(this);
+    openSession->execute();
+    delete openSession;
 }
 
 void Canon::restartSDK() {
-	queue.addTask(new CanonTaskCloseSession());
-	queue.addTask(new CanonTaskShutdown());
+    CanonTaskCloseSession *closeSession = new CanonTaskCloseSession();
+    closeSession->setCanon(this);
+    closeSession->execute();
+    delete closeSession;
+    
+    CanonTaskShutdown *shutDown = new CanonTaskShutdown();
+    shutDown->setCanon(this);
+    shutDown->execute();
+    delete shutDown;
 	initSDK();
 }
 
@@ -77,14 +92,23 @@ void Canon::shutdownSDK(bool isCameraOffline) {
 	}
 	else {
 	 	if(live_view_active) {
-			queue.addTask(new CanonTaskEndEVF());
+            CanonTaskEndEVF *endEVF = new CanonTaskEndEVF();
+            endEVF->setCanon(this);
+            endEVF->execute();
+            delete endEVF;
 			live_view_active = false;
 		}
-		queue.addTask(new CanonTaskCloseSession());
+        CanonTaskCloseSession *closeSession = new CanonTaskCloseSession();
+        closeSession->setCanon(this);
+        closeSession->execute();
+        delete closeSession;
 	}
 	
 	// close sdk.
-	queue.addTask(new CanonTaskShutdown());
+    CanonTaskShutdown *shutDown = new CanonTaskShutdown();
+    shutDown->setCanon(this);
+    shutDown->execute();
+    delete shutDown;
 }
 
 bool Canon::isCameraConnected() {
@@ -205,11 +229,11 @@ void Canon::onCanonEvent(CanonEvent& ev) {
 }
 
 void Canon::fireEvent(CanonEvent& ev) {
-	ofNotifyEvent(canon_event_dispatcher, ev);
+    ofNotifyEvent(canon_event_dispatcher, ev);
 }
 
 void Canon::firePictureTakenEvent(CanonPictureEvent& ev) {
-	ofNotifyEvent(canon_picture_dispatcher, ev);
+    ofNotifyEvent(canon_picture_dispatcher, ev);
 }
 
 void Canon::setSessionOpen(bool isOpen) {
