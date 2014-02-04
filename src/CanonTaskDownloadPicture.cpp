@@ -16,7 +16,12 @@ bool CanonTaskDownloadPicture::execute() {
 	
 	// Created file stream to download image.
 	if(err == EDS_ERR_OK) {
-		string dest = Canon::instance().getDownloadDir() +dir_item_info.szFileName;
+        string dest;
+        if(Canon::instance().getFileName() == "")
+            dest = Canon::instance().getDownloadDir() +dir_item_info.szFileName;
+        else
+            dest = Canon::instance().getDownloadDir() + Canon::instance().getFileName();
+
 		err = EdsCreateFileStream(dest.c_str(), kEdsFileCreateDisposition_CreateAlways, kEdsAccess_ReadWrite, &stream);
 	}
 	if(err != EDS_ERR_OK) {
@@ -41,8 +46,13 @@ bool CanonTaskDownloadPicture::execute() {
 	
 	// Tell we're ready.
 	if(err == EDS_ERR_OK) {
-		CanonPictureEvent ev(dir_item_info.szFileName);
-		Canon::instance().firePictureTakenEvent(ev);
+        if(Canon::instance().getFileName() == ""){
+            CanonPictureEvent ev(dir_item_info.szFileName);
+            Canon::instance().firePictureTakenEvent(ev);
+        }else{
+            CanonPictureEvent ev(Canon::instance().getFileName());
+            Canon::instance().firePictureTakenEvent(ev);
+        }	
 		
 		err = EdsDownloadComplete(dir_item);
 	}

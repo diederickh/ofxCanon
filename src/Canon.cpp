@@ -14,6 +14,7 @@ Canon::Canon()
 ,connection(this)
 ,session_open(false)
 ,live_view_requested(false)
+,file_name("")
 {
 	queue.setCanon(this);
 	instance_ = this;
@@ -112,6 +113,14 @@ ofPixels& Canon::getLivePixels() {
 string Canon::getDownloadDir() {
 	return ofToDataPath("./",true);
 }
+    
+void Canon::setFileName(string newFileName){
+    file_name = newFileName;
+}
+    
+string Canon::getFileName(){
+    return file_name;
+}
 
 void Canon::getProperty(EdsPropertyID propID) {
 	queue.addTask(new CanonTaskGetProperty(propID));
@@ -164,6 +173,20 @@ void Canon::drawLiveView(int x, int y) {
 	live_texture.draw(x,y);
 }
 
+void Canon::drawLiveViewWithSize(int x, int y, int w, int h) {
+    if(has_new_live_image) {
+        if(live_texture.getWidth() != live_pixels.getWidth()
+           || live_texture.getHeight() != live_pixels.getHeight()
+           )
+        {
+            live_texture.allocate(live_pixels.getWidth(), live_pixels.getHeight(), GL_RGB8);
+        }
+        live_texture.loadData(live_pixels);
+        has_new_live_image = false;
+    }
+    live_texture.draw(x,y,w,h);
+}
+    
 void Canon::onCanonEvent(CanonEvent& ev) {
 	if(ev.name == "evf_data_changed") {
 		EdsUInt32 length;
